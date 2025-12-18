@@ -1,0 +1,20 @@
+{# Partial button to include inside vehicle cards. Expects a variable `vehicule` #}
+<div class="position-relative d-inline-block compare-button-wrap">
+    {% set compare = app.session.get('compare_vehicules') ?: [] %}
+    {% if vehicule.getId() in compare %}
+        <span class="compare-badge">Comparé</span>
+    {% endif %}
+
+    <button type="button"
+            class="btn btn-outline-secondary btn-compare"
+            data-id="{{ vehicule.getId() }}">
+        <i class="fas fa-exchange-alt me-1"></i>
+        <span class="compare-label">
+            {% if vehicule.getId() in compare %}
+                Retirer
+            {% else %}
+                Comparer
+            {% endif %}
+        </span>
+    </button>
+</div>

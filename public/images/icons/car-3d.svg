@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" width="64" height="48" aria-hidden="true" role="img">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0%" stop-color="#ffb020" />
+      <stop offset="100%" stop-color="#ff6a00" />
+    </linearGradient>
+    <linearGradient id="g2" x1="0" x2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- shadow under car -->
+  <ellipse cx="60" cy="70" rx="36" ry="6" fill="rgba(0,0,0,0.25)" />
+
+  <!-- car body -->
+  <g id="car" transform="translate(0,0)">
+    <rect x="10" y="28" rx="6" ry="6" width="100" height="28" fill="url(#g1)" />
+    <path d="M16 28 C24 16 40 16 60 16 C80 16 96 16 104 28" fill="none" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
+    <!-- windows -->
+    <path d="M28 24 C36 20 48 20 62 24 C76 28 88 28 96 24" fill="url(#g2)" opacity="0.9"/>
+    <!-- wheels -->
+    <g fill="#111">
+      <circle cx="34" cy="62" r="8" fill="#111" />
+      <circle cx="86" cy="62" r="8" fill="#111" />
+      <circle cx="34" cy="62" r="4" fill="#bbb" />
+      <circle cx="86" cy="62" r="4" fill="#bbb" />
+    </g>
+  </g>
+
+  <!-- subtle glossy sheen -->
+  <path d="M22 30 C36 22 55 20 72 26" stroke="#ffffff" stroke-opacity="0.12" stroke-width="6" fill="none" stroke-linecap="round" />
+
+</svg>

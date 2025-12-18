@@ -1,0 +1,11 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+# Routes lisibles en français
+home:
+    path: /
+    controller: App\Controller\HomeController::index
+    methods: [GET]

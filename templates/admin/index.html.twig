@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+{% block title %}Administration{% endblock %}
+{% block body %}
+    <div class="container-fluid mt-4">
+        <h1 class="mb-4">Tableau de bord</h1>
+        
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4>{{ totalVehicles }}</h4>
+                                <p class="mb-0">Véhicules total</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-car fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4>{{ availableVehicles }}</h4>
+                                <p class="mb-0">Véhicules disponibles</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4>{{ totalReservations }}</h4>
+                                <p class="mb-0">Réservations</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-calendar fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4>{{ totalUsers }}</h4>
+                                <p class="mb-0">Utilisateurs</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Actions rapides</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <a href="{{ path('app_admin_vehicle_new') }}" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus"></i> Nouveau véhicule
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="{{ path('app_admin_vehicles') }}" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-car"></i> Gérer véhicules
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="{{ path('app_admin_reservations') }}" class="btn btn-outline-info w-100">
+                                    <i class="fas fa-calendar"></i> Gérer réservations
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="{{ path('app_admin_users') }}" class="btn btn-outline-warning w-100">
+                                    <i class="fas fa-users"></i> Gérer utilisateurs
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Reservations -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Réservations récentes</h5>
+                        <a href="{{ path('app_admin_reservations') }}" class="btn btn-sm btn-outline-primary">Voir tout</a>
+                    </div>
+                    <div class="card-body">
+                        {% if recentReservations is empty %}
+                            <p class="text-muted text-center">Aucune réservation récente.</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Client</th>
+                                            <th>Véhicule</th>
+                                            <th>Période</th>
+                                            <th>Prix</th>
+                                            <th>Statut</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for reservation in recentReservations %}
+                                            <tr>
+                                                <td>#{{ reservation.id }}</td>
+                                                <td>{{ reservation.utilisateur.firstName }} {{ reservation.utilisateur.lastName }}</td>
+                                                <td>{{ reservation.vehicule.brand.name }} {{ reservation.vehicule.model }}</td>
+                                                <td>{{ reservation.debut|date('d/m/Y') }} - {{ reservation.fin|date('d/m/Y') }}</td>
+                                                <td>{{ reservation.totalPrice }}€</td>
+                                                <td>
+                                                    <span class="badge 
+                                                        {% if reservation.statut == 'cree' %}bg-warning
+                                                        {% elseif reservation.statut == 'confirme' %}bg-success
+                                                        {% elseif reservation.statut == 'annule' %}bg-danger
+                                                        {% elseif reservation.statut == 'termine' %}bg-secondary
+                                                        {% else %}bg-info{% endif %}">
+                                                        {{ reservation.statut|title }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ reservation.createdAt|date('d/m/Y') }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

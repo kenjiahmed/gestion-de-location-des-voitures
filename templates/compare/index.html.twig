@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comparer des véhicules{% endblock %}
+
+{% block body %}
+    <div class="container py-5 compare-wrapper">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Comparaison</h1>
+            <div>
+                <button id="compare-clear-top" class="btn btn-outline-light me-2">Vider</button>
+                <a href="{{ path('app_catalogue') }}" class="btn btn-primary">Retour au catalogue</a>
+            </div>
+        </div>
+
+        {% if vehicules is empty %}
+            <div class="alert alert-info">Aucun véhicule sélectionné pour la comparaison.</div>
+        {% else %}
+
+            {# Grid: première colonne labels, colonnes suivantes pour chaque véhicule #}
+            <div class="card compare-panel mb-4">
+
+                {% set cols = vehicules|length %}
+                <div class="compare-grid" style="grid-template-columns: var(--label-col-width) repeat({{ cols }}, 1fr); align-items:start;">
+
+                    {# Header label cell #}
+                    <div class="compare-label-col">
+                        <div class="compare-label">Caractéristiques</div>
+                    </div>
+
+                    {# Header for each vehicle: image + name + remove button #}
+                    {% set compareIds = app.session.get('compare_vehicules') ?: [] %}
+                    {% for v in vehicules %}
+                        <div class="compare-card position-relative" aria-labelledby="vehicle-{{ v.getId() }}">
+                            {% if v.getId() in compareIds %}
+                                <span class="compare-badge">Comparé</span>
+                            {% endif %}
+                            <div class="compare-header">
+                                {% set img = v.getMainImage() %}
+                                {% if img %}
+                                    <img src="{{ asset('images/vehicles/' ~ img.getFilename()) }}" alt="{{ img.getAlt() ?: (v.getBrand() ? v.getBrand().getName() ~ ' ' ~ v.getModel() : v.getModel()) }}" class="compare-image">
+                                {% else %}
+                                    <img src="{{ asset('images/vehicles/placeholder.svg') }}" alt="Pas d'image" class="compare-image">
+                                {% endif %}
+                                <div id="vehicle-{{ v.getId() }}" class="compare-name">{{ v.getBrand() ? v.getBrand().getName() : '' }} {{ v.getModel() }}</div>
+                                <div class="compare-actions">
+                                    <button class="btn btn-sm btn-outline-danger remove-compare" data-id="{{ v.getId() }}">Retirer</button>
+                                    <a href="{{ path('app_vehicle_details', {id: v.getId()}) }}" class="btn btn-sm btn-outline-primary">Voir</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {# Row: Prix / jour #}
+                    <div class="compare-label">Prix / jour</div>
+                    {% for v in vehicules %}
+                        <div class="compare-cell text-center h-100 align-middle">{{ v.getPricePerDay() }}€</div>
+                    {% endfor %}
+
+                    {# Row: Année #}
+                    <div class="compare-label">Année</div>
+                    {% for v in vehicules %}
+                        <div class="compare-cell text-center">{{ v.getYear() }}</div>
+                    {% endfor %}
+
+                    {# Row: Places #}
+                    <div class="compare-label">Places</div>
+                    {% for v in vehicules %}
+                        <div class="compare-cell text-center">{{ v.getSeats() }}</div>
+                    {% endfor %}
+
+                    {# Row: Carburant #}
+                    <div class="compare-label">Carburant</div>
+                    {% for v in vehicules %}
+                        <div class="compare-cell text-center">{{ v.getFuelType() }}</div>
+                    {% endfor %}
+
+                    {# Row: Boîte #}
+                    <div class="compare-label">Boîte</div>
+                    {% for v in vehicules %}
+                        <div class="compare-cell text-center">{{ v.getTransmission() }}</div>
+                    {% endfor %}
+
+                    {# Row: Couleur #}
+                    <div class="compare-label">Couleur</div>
+                    {% for v in vehicules %}
+                        <div class="compare-cell text-center">{{ v.getColor() }}</div>
+                    {% endfor %}
+
+                    {# Row: Description #}
+                    <div class="compare-label">Description</div>
+                    {% for v in vehicules %}
+                        <div class="compare-cell">{{ v.getDescription() }}</div>
+                    {% endfor %}
+
+                    {# Row: Actions (Réserver) #}
+                    <div class="compare-label"></div>
+                    {% for v in vehicules %}
+                        <div class="compare-cell text-center">
+                            {% if app.user %}
+                                <a href="{{ path('app_reservation_create', {id: v.getId()}) }}" class="btn btn-success">Réserver</a>
+                            {% else %}
+                                <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter pour réserver</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('click', function (e) {
+            const remove = e.target.closest('.remove-compare');
+            if (remove) {
+                const id = remove.dataset.id;
+                fetch('/compare/remove', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: 'id=' + encodeURIComponent(id)
+                }).then(r => r.json()).then(() => location.reload());
+                return;
+            }
+
+            if (e.target && e.target.id === 'compare-clear-top') {
+                fetch('/compare/clear', {method: 'POST'}).then(() => location.reload());
+            }
+        });
+    </script>
+{% endblock %}

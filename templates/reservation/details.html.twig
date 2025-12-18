@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+{% block title %}Détails de la réservation{% endblock %}
+{% block body %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">Détails de la réservation</h2>
+                        <span class="badge 
+                            {% if reservation.statut == 'cree' %}bg-warning
+                            {% elseif reservation.statut == 'confirme' %}bg-success
+                            {% elseif reservation.statut == 'annule' %}bg-danger
+                            {% elseif reservation.statut == 'termine' %}bg-secondary
+                            {% else %}bg-info{% endif %} fs-6">
+                            {{ reservation.statut|title }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Informations de réservation</h5>
+                                <ul class="list-unstyled">
+                                    <li><strong>Référence:</strong> #{{ reservation.id }}</li>
+                                    <li><strong>Date de création:</strong> {{ reservation.createdAt|date('d/m/Y à H:i') }}</li>
+                                    <li><strong>Période:</strong> {{ reservation.debut|date('d/m/Y') }} - {{ reservation.fin|date('d/m/Y') }}</li>
+                                    <li><strong>Durée:</strong> {{ reservation.getDurationInDays }} jour(s)</li>
+                                    <li><strong>Prix total:</strong> <span class="text-success h5">{{ reservation.totalPrice }}€</span></li>
+                                </ul>
+                                
+                                {% if reservation.notes %}
+                                    <h6>Notes:</h6>
+                                    <p class="text-muted">{{ reservation.notes }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h5>Informations client</h5>
+                                <ul class="list-unstyled">
+                                    <li><strong>Nom:</strong> {{ reservation.utilisateur.firstName }} {{ reservation.utilisateur.lastName }}</li>
+                                    <li><strong>Email:</strong> {{ reservation.utilisateur.email }}</li>
+                                    <li><strong>Téléphone:</strong> {{ reservation.utilisateur.phone }}</li>
+                                    <li><strong>Pays:</strong> {{ reservation.utilisateur.country }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Véhicule réservé</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if reservation.vehicule.mainImage %}
+                            <img src="/images/vehicles/{{ reservation.vehicule.mainImage.filename }}" 
+                                 class="img-fluid rounded mb-3" alt="{{ reservation.vehicule.mainImage.alt }}">
+                        {% endif %}
+                        
+                        <h5>{{ reservation.vehicule.brand.name }} {{ reservation.vehicule.model }}</h5>
+                        <p class="text-muted">{{ reservation.vehicule.year }} • {{ reservation.vehicule.category.name }}</p>
+                        
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-palette"></i> {{ reservation.vehicule.color }}</li>
+                            <li><i class="fas fa-users"></i> {{ reservation.vehicule.seats }} places</li>
+                            <li><i class="fas fa-gas-pump"></i> {{ reservation.vehicule.fuelType|title }}</li>
+                            <li><i class="fas fa-cog"></i> {{ reservation.vehicule.transmission|title }}</li>
+                        </ul>
+                        
+                        <div class="alert alert-info">
+                            <strong>Prix:</strong> {{ reservation.vehicule.pricePerDay }}€/jour
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{{ path('app_vehicle_details', {id: reservation.vehicule.id}) }}" 
+                               class="btn btn-outline-primary">
+                                <i class="fas fa-eye"></i> Voir le véhicule
+                            </a>
+                            
+                            {% if app.user == reservation.utilisateur and (reservation.statut == 'cree' or reservation.statut == 'confirme') %}
+                                <form method="post" action="{{ path('app_reservation_cancel', {id: reservation.id}) }}" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')">
+                                    <button type="submit" class="btn btn-outline-danger w-100">
+                                        <i class="fas fa-times"></i> Annuler la réservation
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

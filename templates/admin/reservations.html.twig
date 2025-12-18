@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des réservations{% endblock %}
+{% block body %}
+    <div class="container-fluid mt-4">
+        <h1 class="mb-4">Gestion des réservations</h1>
+
+        {% if reservations.items is empty %}
+            <div class="alert alert-info text-center">
+                <h4>Aucune réservation</h4>
+                <p>Aucune réservation n'a été trouvée.</p>
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Client</th>
+                                    <th>Véhicule</th>
+                                    <th>Période</th>
+                                    <th>Prix</th>
+                                    <th>Statut</th>
+                                    <th>Date création</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reservation in reservations %}
+                                    <tr>
+                                        <td>#{{ reservation.id }}</td>
+                                        <td>
+                                            <strong>{{ reservation.utilisateur.firstName }} {{ reservation.utilisateur.lastName }}</strong><br>
+                                            <small class="text-muted">{{ reservation.utilisateur.email }}</small>
+                                        </td>
+                                        <td>
+                                            <strong>{{ reservation.vehicule.brand.name }} {{ reservation.vehicule.model }}</strong><br>
+                                            <small class="text-muted">{{ reservation.vehicule.year }}</small>
+                                        </td>
+                                        <td>
+                                            {{ reservation.debut|date('d/m/Y') }}<br>
+                                            <small class="text-muted">au {{ reservation.fin|date('d/m/Y') }}</small>
+                                        </td>
+                                        <td>{{ reservation.totalPrice }}€</td>
+                                        <td>
+                                            <form method="post" action="{{ path('app_admin_reservation_status', {id: reservation.id}) }}" class="d-inline">
+                                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                                    <option value="cree" {{ reservation.statut == 'cree' ? 'selected' : '' }}>Créé</option>
+                                                    <option value="confirme" {{ reservation.statut == 'confirme' ? 'selected' : '' }}>Confirmé</option>
+                                                    <option value="annule" {{ reservation.statut == 'annule' ? 'selected' : '' }}>Annulé</option>
+                                                    <option value="termine" {{ reservation.statut == 'termine' ? 'selected' : '' }}>Terminé</option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td>{{ reservation.createdAt|date('d/m/Y H:i') }}</td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{{ path('app_reservation_details', {id: reservation.id}) }}" 
+                                                   class="btn btn-outline-info" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ path('app_vehicle_details', {id: reservation.vehicule.id}) }}" 
+                                                   class="btn btn-outline-primary" title="Voir véhicule">
+                                                    <i class="fas fa-car"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ knp_pagination_render(reservations, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

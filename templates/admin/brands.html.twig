@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des marques{% endblock %}
+{% block body %}
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Gestion des marques</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBrandModal">
+                <i class="fas fa-plus"></i> Nouvelle marque
+            </button>
+        </div>
+
+        {% if brands is empty %}
+            <div class="alert alert-info text-center">
+                <h4>Aucune marque</h4>
+                <p>Commencez par ajouter votre première marque.</p>
+            </div>
+        {% else %}
+            <div class="row">
+                {% for brand in brands %}
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            {% if brand.logo %}
+                                <img src="/images/brands/{{ brand.logo }}" class="card-img-top" alt="{{ brand.name }}" 
+                                     style="height: 150px; object-fit: contain; padding: 1rem;">
+                            {% else %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                     style="height: 150px;">
+                                    <i class="fas fa-car fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ brand.name }}</h5>
+                                <p class="card-text text-muted small">{{ brand.description|slice(0, 100) }}{% if brand.description|length > 100 %}...{% endif %}</p>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="text-muted">{{ brand.vehicles|length }} véhicule(s)</small>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-outline-danger" title="Supprimer" 
+                                                    onclick="if(confirm('Supprimer cette marque ?')) { /* TODO: Implement delete */ }">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Add Brand Modal -->
+    <div class="modal fade" id="addBrandModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nouvelle marque</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="brandName" class="form-label">Nom de la marque</label>
+                            <input type="text" class="form-control" id="brandName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="brandDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="brandDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="brandLogo" class="form-label">Logo (URL)</label>
+                            <input type="url" class="form-control" id="brandLogo">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary">Créer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

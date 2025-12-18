@@ -1,0 +1,45 @@
+# Vendor and build
+/vendor/
+/node_modules/
+/public/build/
+/public/bundles/
+
+# Symfony and IDE
+/.env
+/.env.local
+/.env.*.local
+/.idea/
+/.vscode/
+/.phpunit.result.cache
+
+# Symfony var folders
+/var/cache/
+/var/log/
+/var/sessions/
+/var/test/
+/public/uploads/
+
+# Composer
+composer.lock
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+
+# Database
+/data_dev.db
+
+# npm
+package-lock.json
+
+# Ignore local secrets
+/secrets.local.php
+
+# Ignore PHPStorm misc
+/.phpstorm.meta.php
+
+# Keep README and other project files
+

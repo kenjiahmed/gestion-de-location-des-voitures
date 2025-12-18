@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des utilisateurs{% endblock %}
+{% block body %}
+    <div class="container-fluid mt-4">
+        <h1 class="mb-4">Gestion des utilisateurs</h1>
+
+        {% if users.items is empty %}
+            <div class="alert alert-info text-center">
+                <h4>Aucun utilisateur</h4>
+                <p>Aucun utilisateur n'a été trouvé.</p>
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Pays</th>
+                                    <th>Rôle</th>
+                                    <th>Inscription</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>
+                                            <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+                                        </td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.phone ?: '-' }}</td>
+                                        <td>{{ user.country ?: '-' }}</td>
+                                        <td>
+                                            {% if user.isAdmin() %}
+                                                <span class="badge bg-danger">Admin</span>
+                                            {% else %}
+                                                <span class="badge bg-primary">Utilisateur</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="#" class="btn btn-outline-info" title="Voir profil">
+                                                    <i class="fas fa-user"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-outline-primary" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                {% if not user.isAdmin() %}
+                                                    <button class="btn btn-outline-warning" title="Promouvoir admin" 
+                                                            onclick="if(confirm('Promouvoir cet utilisateur au rang d\'administrateur ?')) { /* TODO: Implement promote to admin */ }">
+                                                        <i class="fas fa-crown"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ knp_pagination_render(users, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
