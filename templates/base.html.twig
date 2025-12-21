@@ -20,6 +20,113 @@
                 .card:hover { transform: translateY(-2px); }
                 .navbar-brand { font-weight: bold; }
 
+                /* Modern navbar styles */
+                .navbar-custom {
+                    background: linear-gradient(90deg, rgba(86,180,255,1) 0%, rgba(88,166,255,1) 50%, rgba(255,106,0,1) 100%);
+                    color: #07203a;
+                    box-shadow: 0 4px 18px rgba(2,6,23,0.08);
+                    border-bottom-left-radius: 0.35rem;
+                    border-bottom-right-radius: 0.35rem;
+                }
+
+                /* Ensure brand and links are visible in both modes */
+                .navbar-custom .navbar-brand, .navbar-custom .navbar-brand .ms-2 { color: rgba(255,255,255,0.95); }
+                .navbar-custom .nav-link { color: rgba(255,255,255,0.95); }
+
+                .navbar-custom .nav-link {
+                    color: rgba(255,255,255,0.95);
+                    font-weight: 500;
+                    transition: color 0.15s ease, transform 0.12s ease;
+                }
+
+                .navbar-custom .nav-link:hover {
+                    color: #07203a;
+                    transform: translateY(-2px);
+                    text-shadow: 0 1px 0 rgba(255,255,255,0.06);
+                }
+
+                .navbar-custom .btn-primary {
+                    background: rgba(2,6,23,0.06);
+                    color: #fff;
+                    border: 1px solid rgba(255,255,255,0.08);
+                }
+
+                .navbar-avatar {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(255,255,255,0.9);
+                    color: #07203a;
+                    font-weight: 600;
+                    box-shadow: 0 2px 8px rgba(2,6,23,0.12);
+                    margin-right: 0.5rem;
+                }
+
+                .nav-admin-badge {
+                    background: rgba(0,0,0,0.08);
+                    color: #fff;
+                    font-size: 0.75rem;
+                    padding: 0.15rem 0.4rem;
+                    border-radius: 0.25rem;
+                    margin-left: 0.35rem;
+                }
+
+                .navbar-toggler-custom {
+                    border: none;
+                    background: rgba(255,255,255,0.12);
+                    width: 44px;
+                    height: 36px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 0.35rem;
+                }
+
+                /* Dropdown styling to match navbar and dark mode */
+                .dropdown-menu {
+                    min-width: 180px;
+                    border-radius: 0.5rem;
+                }
+
+                .dropdown-menu .dropdown-item { color: #07203a; }
+                .dropdown-menu .dropdown-item:hover { background: rgba(255,255,255,0.06); }
+
+                /* Dark Theme overrides for navbar */
+                .dark-theme .navbar-custom {
+                    /* Colorful gradient adapted for dark backgrounds: deep blue -> indigo -> warm orange accent */
+                    background: linear-gradient(90deg, #031426 0%, #0b2240 50%, #2b1220 80%, #ff6a00 100%) !important;
+                    color: #e6eef6;
+                    box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+                    border-bottom-left-radius: 0.25rem;
+                    border-bottom-right-radius: 0.25rem;
+                    overflow: hidden;
+                }
+                /* Links and brand remain light but we add subtle glow on hover using the orange accent */
+                .dark-theme .navbar-custom .nav-link { color: rgba(230,238,246,0.95); }
+                .dark-theme .navbar-custom .nav-link:hover { color: #ffddb8; text-shadow: 0 1px 10px rgba(255,140,30,0.12); }
+                .dark-theme .navbar-custom .navbar-brand, .dark-theme .navbar-custom .navbar-brand .ms-2 { color: #fff8ee; }
+
+                /* Avatar and toggler tuned for dark colorful navbar */
+                .dark-theme .navbar-avatar { background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); color: #ffdca8; box-shadow: 0 2px 8px rgba(0,0,0,0.6); border: 1px solid rgba(255,160,40,0.06); }
+                .dark-theme .navbar-toggler-custom { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.02); }
+
+                /* Admin badge accent */
+                .dark-theme .nav-admin-badge { background: rgba(255,106,0,0.12); color: #ffddb8; border: 1px solid rgba(255,106,0,0.16); }
+
+                /* Dropdown in dark colorful theme */
+                .dark-theme .dropdown-menu {
+                    background: linear-gradient(180deg, #071224 0%, #081822 60%); /* subtle depth */
+                    color: #e6eef6;
+                    border: 1px solid rgba(255,255,255,0.03);
+                    box-shadow: 0 8px 30px rgba(2,8,23,0.6);
+                }
+                .dark-theme .dropdown-item { color: #e6eef6; }
+                .dark-theme .dropdown-item:hover { background-color: rgba(255,106,0,0.08); color: #fff; }
+                .dark-theme .dropdown-divider { border-color: rgba(255,255,255,0.03); }
+
                 /* Dark Theme Styles */
                 .dark-theme {
                     background-color: #1a1a1a !important;
@@ -225,11 +332,11 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-            <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}" title="Accueil" aria-label="Accueil">
-                    <!-- Remplacement du viewer 3D par un SVG simple et léger -->
-                    <span class="d-inline-block" aria-hidden="false" role="img">
+        <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+             <div class="container">
+                 <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}" title="Accueil" aria-label="Accueil">
+                     <!-- Remplacement du viewer 3D par un SVG simple et léger -->
+                     <span class="d-inline-block" aria-hidden="false" role="img">
                         <!-- inline SVG simple repris depuis public/images/icons/car-3d.svg pour meilleure résolution et contrôle -->
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" width="48" height="32" aria-hidden="true" role="img">
                           <defs>
@@ -256,73 +363,98 @@
                           </g>
                           <path d="M22 30 C36 22 55 20 72 26" stroke="#ffffff" stroke-opacity="0.12" stroke-width="6" fill="none" stroke-linecap="round" />
                         </svg>
+                     </span>
+                     <span class="ms-2">RentCars</span>
+                 </a>
+                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample" aria-controls="navbarsExample" aria-expanded="false" aria-label="Basculer la navigation">
+                    <span class="navbar-toggler-custom">
+                        <i class="fas fa-bars" style="color:rgba(255,255,255,0.95);"></i>
                     </span>
-                    <span class="ms-2">RentCars</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample" aria-controls="navbarsExample" aria-expanded="false" aria-label="Basculer la navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarsExample">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_catalogue') }}">Catalogue</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_reservations_mes') }}">Mes réservations</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_admin_dashboard') }}">Admin</a></li>
-                    </ul>
-                    <div class="d-flex align-items-center">
-                        <!-- Dark/Light Mode Toggle -->
-                        <button class="btn btn-outline-light me-3" id="themeToggle" title="Basculer le thème">
-                            <i class="fas fa-moon" id="themeIcon"></i>
-                        </button>
+                 </button>
+                 <div class="collapse navbar-collapse" id="navbarsExample">
+                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                         <li class="nav-item"><a class="nav-link" href="{{ path('app_catalogue') }}">Catalogue</a></li>
+                         <li class="nav-item"><a class="nav-link" href="{{ path('app_reservations_mes') }}">Mes réservations</a></li>
+                        {# Affiche le lien Admin seulement si l'utilisateur a ROLE_ADMIN #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_admin_dashboard') }}">Admin <span class="nav-admin-badge">ADM</span></a>
+                            </li>
+                        {% endif %}
+                     </ul>
+                     <div class="d-flex align-items-center">
+                         <!-- Dark/Light Mode Toggle -->
+                         <button class="btn btn-outline-light me-3" id="themeToggle" title="Basculer le thème">
+                             <i class="fas fa-moon" id="themeIcon"></i>
+                         </button>
 
+                        {# Utilisateur connecté : avatar + dropdown. Sinon : boutons Connexion / Inscription #}
                         {% if app.user %}
-                            <span class="navbar-text me-3">Bonjour, {{ app.user.userIdentifier }}</span>
-                            <a class="btn btn-outline-light" href="{{ path('app_logout') }}">Déconnexion</a>
+                            <div class="d-flex align-items-center">
+                                {# Avatar avec initiales #}
+                                <div class="navbar-avatar" title="{{ app.user.userIdentifier }}">
+                                    {{ (app.user.firstName ? app.user.firstName|slice(0,1) : app.user.userIdentifier|slice(0,1))|upper }}
+                                </div>
+                                <div class="dropdown">
+                                    <a class="nav-link dropdown-toggle text-white" href="#" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">{{ app.user.firstName ? app.user.firstName : app.user.userIdentifier }}</a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                                        <li><a class="dropdown-item" href="#">Profil</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_reservations_mes') }}">Mes réservations</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="{{ path('app_admin_dashboard') }}">Panneau Admin</a></li>
+                                        {% endif %}
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         {% else %}
                             <a class="btn btn-outline-light me-2" href="{{ path('app_login') }}">Connexion</a>
-                            <a class="btn btn-primary" href="{{ path('app_register') }}">Créer un compte</a>
+                            <a class="btn btn-light text-dark" href="{{ path('app_register') }}">Créer un compte</a>
                         {% endif %}
-                    </div>
-                </div>
-            </div>
-        </nav>
+                     </div>
+                 </div>
+             </div>
+         </nav>
 
-        <main class="container">
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-            {% block body %}{% endblock %}
-        </main>
-        {# Floating chatbot button #}
-        <button id="ai-chat-btn" class="ai-chat-btn car-3d-btn" title="Assistant" aria-label="Ouvrir l'assistant">
-            <img src="{{ asset('images/icons/chatbot.svg') }}" alt="Assistant" />
-        </button>
+         <main class="container">
+             {% for label, messages in app.flashes %}
+                 {% for message in messages %}
+                     <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                         {{ message }}
+                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                     </div>
+                 {% endfor %}
+             {% endfor %}
+             {% block body %}{% endblock %}
+         </main>
+         {# Floating chatbot button #}
+         <button id="ai-chat-btn" class="ai-chat-btn car-3d-btn" title="Assistant" aria-label="Ouvrir l'assistant">
+             <img src="{{ asset('images/icons/chatbot.svg') }}" alt="Assistant" />
+         </button>
 
-        {# Chatbot Offcanvas (Bootstrap) #}
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="aiChatOffcanvas" aria-labelledby="aiChatLabel">
-          <div class="offcanvas-header">
-            <h5 id="aiChatLabel">Assistant</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
-          </div>
-          <div class="offcanvas-body">
-            <p>Assistant prototype — intégration AI future. Pour l'instant, utilisez ce panneau comme espace de conversation.</p>
-            <div class="d-grid gap-2">
-              <button class="btn btn-primary">Commencer une conversation</button>
-            </div>
-          </div>
-        </div>
+         {# Chatbot Offcanvas (Bootstrap) #}
+         <div class="offcanvas offcanvas-end" tabindex="-1" id="aiChatOffcanvas" aria-labelledby="aiChatLabel">
+           <div class="offcanvas-header">
+             <h5 id="aiChatLabel">Assistant</h5>
+             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+           </div>
+           <div class="offcanvas-body">
+             <p>Assistant prototype — intégration AI future. Pour l'instant, utilisez ce panneau comme espace de conversation.</p>
+             <div class="d-grid gap-2">
+               <button class="btn btn-primary">Commencer une conversation</button>
+             </div>
+           </div>
+         </div>
 
-        {# Compare bar: shows count and link to compare page #}
-        <div id="compare-bar" style="position:fixed;right:20px;bottom:20px;z-index:9999;">
-            <a href="{{ path('app_compare_index') }}" class="btn btn-warning">
-                <i class="fas fa-balance-scale me-1"></i>
-                Comparer (<span id="compare-count">{{ app.session.get('compare_vehicules') ? app.session.get('compare_vehicules')|length : 0 }}</span>)
-            </a>
-            <button id="compare-clear" class="btn btn-outline-light ms-2">Vider</button>
-        </div>
-    </body>
-</html>
+         {# Compare bar: shows count and link to compare page #}
+         <div id="compare-bar" style="position:fixed;right:20px;bottom:20px;z-index:9999;">
+             <a href="{{ path('app_compare_index') }}" class="btn btn-warning">
+                 <i class="fas fa-balance-scale me-1"></i>
+                 Comparer (<span id="compare-count">{{ app.session.get('compare_vehicules') ? app.session.get('compare_vehicules')|length : 0 }}</span>)
+             </a>
+             <button id="compare-clear" class="btn btn-outline-light ms-2">Vider</button>
+         </div>
+     </body>
+ </html>

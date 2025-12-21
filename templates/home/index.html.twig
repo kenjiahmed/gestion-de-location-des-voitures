@@ -5,7 +5,8 @@
 {% block body %}
     <!-- Hero Section -->
     <section class="hero-section bg-dark text-white position-relative overflow-hidden">
-        <div class="hero-overlay position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.4));"></div>
+        <div class="hero-overlay position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));"></div>
+        <div class="hero-image-bg position-absolute w-100 h-100" aria-hidden="true"></div>
         <div class="container position-relative" style="z-index: 2;">
             <div class="row align-items-center min-vh-75">
                 <div class="col-lg-6">
@@ -29,7 +30,7 @@
                 </div>
                 <div class="col-lg-6 text-center">
                     <div class="hero-car-image">
-                        <i class="fas fa-car fa-10x text-warning opacity-75"></i>
+                        <i class="fas fa-car fa-7x text-warning opacity-90"></i>
                     </div>
                 </div>
             </div>
@@ -97,7 +98,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="card h-100 shadow-sm border-0">
                         <div class="position-relative">
-                            <img src="/images/vehicles/sample-bmw-serie-3.png" class="card-img-top" alt="BMW Série 3" style="height: 250px; object-fit: cover;">
+                            <img src="{{ asset('images/vehicles/sample-bmw-serie-3.png') }}" class="card-img-top" alt="BMW Série 3" style="height: 250px; object-fit: cover;">
                             <div class="position-absolute top-0 end-0 m-3">
                                 <span class="badge bg-warning text-dark fs-6">Populaire</span>
                             </div>
@@ -126,7 +127,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="card h-100 shadow-sm border-0">
                         <div class="position-relative">
-                            <img src="/images/vehicles/sample-tesla-model-s.png" class="card-img-top" alt="Tesla Model S" style="height: 250px; object-fit: cover;">
+                            <img src="{{ asset('images/vehicles/sample-tesla-model-s.png') }}" class="card-img-top" alt="Tesla Model S" style="height: 250px; object-fit: cover;">
                             <div class="position-absolute top-0 end-0 m-3">
                                 <span class="badge bg-success fs-6">Écologique</span>
                             </div>
@@ -155,7 +156,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="card h-100 shadow-sm border-0">
                         <div class="position-relative">
-                            <img src="/images/vehicles/sample-porsche-911.png" class="card-img-top" alt="Porsche 911" style="height: 250px; object-fit: cover;">
+                            <img src="{{ asset('images/vehicles/sample-porsche-911.png') }}" class="card-img-top" alt="Porsche 911" style="height: 250px; object-fit: cover;">
                             <div class="position-absolute top-0 end-0 m-3">
                                 <span class="badge bg-danger fs-6">Sport</span>
                             </div>
@@ -287,66 +288,125 @@
     {{ parent() }}
     <style>
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 80vh;
-        }
+-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
++            /* fallback gradient while image loads */
++            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
++            position: relative;
++            overflow: hidden;
 
-        .min-vh-75 {
-            min-height: 75vh;
-        }
+             min-height: 80vh;
+         }
++
++        /* Background image container (separate element for better overlay control) */
++        .hero-image-bg {
++            /* background-image set dynamically via JS so we can gracefully fall back */
++            background-image: none;
++            background-size: cover;
++            background-position: center center;
++            background-repeat: no-repeat;
++            filter: brightness(0.55) saturate(0.95);
++            position: absolute;
++            top: 0;
++            left: 0;
++            width: 100%;
++            height: 100%;
++            z-index: 1;
++            transition: transform 0.6s ease, filter 0.3s ease;
++        }
++
++        /* Slight parallax on large screens */
++        @media (min-width: 992px) {
++            .hero-image-bg { transform: scale(1.05); }
++        }
++
++        /* Ensure overlay sits above image but below content */
++        .hero-overlay { z-index: 1.5; }
++
++        /* Reduce icon size a bit to not cover hero text when image is present */
++        .hero-car-image .fa-car { font-size: 6rem; }
++
++        /* Dark theme tweak: make background slightly darker */
++        .dark-theme .hero-image-bg { filter: brightness(0.4) saturate(0.85) contrast(0.95); }
 
-        .feature-icon {
-            transition: transform 0.3s ease;
-        }
+         .min-vh-75 {
+             min-height: 75vh;
+         }
 
-        .feature-icon:hover {
-            transform: translateY(-5px);
-        }
+         .feature-icon {
+             transition: transform 0.3s ease;
+         }
 
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+         .feature-icon:hover {
+             transform: translateY(-5px);
+         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
-        }
+         .card {
+             transition: transform 0.3s ease, box-shadow 0.3s ease;
+         }
 
-        .stat-item {
-            transition: transform 0.3s ease;
-        }
+         .card:hover {
+             transform: translateY(-10px);
+             box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+         }
 
-        .stat-item:hover {
-            transform: translateY(-5px);
-        }
+         .stat-item {
+             transition: transform 0.3s ease;
+         }
 
-        .step-number {
-            transition: transform 0.3s ease;
-        }
+         .stat-item:hover {
+             transform: translateY(-5px);
+         }
 
-        .step-number:hover {
-            transform: scale(1.1);
-        }
+         .step-number {
+             transition: transform 0.3s ease;
+         }
 
-        .bg-gradient-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+         .step-number:hover {
+             transform: scale(1.1);
+         }
 
-        .bg-gradient-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        }
+         .bg-gradient-primary {
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+         }
 
-        .bg-gradient-danger {
-            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-        }
+         .bg-gradient-success {
+             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+         }
 
-        .hero-car-image {
-            animation: float 6s ease-in-out infinite;
-        }
+         .bg-gradient-danger {
+             background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
+         .hero-car-image {
+             animation: float 6s ease-in-out infinite;
+         }
+
+         @keyframes float {
+             0%, 100% { transform: translateY(0px); }
+             50% { transform: translateY(-20px); }
+         }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Try to use a custom background if present at /images/home-bg.jpg, otherwise use a bundled sample image.
+        document.addEventListener('DOMContentLoaded', function() {
+            var heroBg = document.querySelector('.hero-image-bg');
+            if (!heroBg) return;
+            var preferred = '{{ asset('images/home-bg.jpg') }}';
+            var fallback = '{{ asset('images/vehicles/sample-porsche-911.png') }}';
+
+            var img = new Image();
+            img.onload = function() {
+                heroBg.style.backgroundImage = 'url("' + preferred + '")';
+            };
+            img.onerror = function() {
+                heroBg.style.backgroundImage = 'url("' + fallback + '")';
+            };
+            // Kick off load
+            img.src = preferred;
+        });
+    </script>
 {% endblock %}
