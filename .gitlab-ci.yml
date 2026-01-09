@@ -24,12 +24,12 @@ install_dependencies:
   image: php:8.2-fpm
   before_script:
     - apt-get update && apt-get install -y git zip unzip libpq-dev libzip-dev libicu-dev libonig-dev libxml2-dev
-    - docker-php-ext-install pdo pdo_pgsql zip intl
+    - docker-php-ext-install pdo pdo_pgsql zip intl mbstring
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - php -v
     - composer --version
   script:
     - composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
-    - composer check-platform-reqs || echo "Platform requirements check failed but continuing..."
   artifacts:
     paths:
       - vendor/
