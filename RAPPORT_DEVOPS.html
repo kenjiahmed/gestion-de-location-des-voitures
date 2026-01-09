@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport DevOps - Rent Cars</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20mm;
+            background: #fff;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #2980b9;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+            margin-top: 40px;
+            font-size: 22px;
+        }
+
+        h3 {
+            color: #34495e;
+            font-size: 18px;
+            margin-top: 25px;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            color: white;
+            border: none;
+            margin: 0;
+        }
+
+        .metadata {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .metadata p {
+            margin: 5px 0;
+        }
+
+        .screenshot-placeholder {
+            background: #f0f0f0;
+            border: 2px dashed #3498db;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #555;
+        }
+
+        .screenshot-placeholder strong {
+            color: #e74c3c;
+            font-size: 18px;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+
+        pre code {
+            background: none;
+            color: #ecf0f1;
+        }
+
+        .architecture-box {
+            background: #fff;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th {
+            background: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            padding: 5px 0;
+        }
+
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                max-width: 100%;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RAPPORT DEVOPS</h1>
+        <h2 style="color: white; border: none; margin-top: 10px;">Projet Rent Cars - Location de Voitures</h2>
+    </div>
+
+    <div class="metadata">
+        <p><strong>Étudiant :</strong> [VOTRE NOM ICI]</p>
+        <p><strong>Date :</strong> 9 Janvier 2026</p>
+        <p><strong>Projet :</strong> Application de Location de Voitures</p>
+        <p><strong>Stack Technique :</strong> Symfony 7 + PHP 8.3 + PostgreSQL 15 + Docker + GitLab CI/CD</p>
+    </div>
+
+    <!-- TABLE DES MATIÈRES -->
+    <div class="toc">
+        <h2>📋 TABLE DES MATIÈRES</h2>
+        <ul>
+            <li><a href="#introduction">1. Introduction</a></li>
+            <li><a href="#architecture">2. Architecture du Projet</a></li>
+            <li><a href="#dockerisation">3. Dockerisation</a></li>
+            <li><a href="#tests">4. Tests Automatisés</a></li>
+            <li><a href="#cicd">5. Pipeline CI/CD GitLab</a></li>
+            <li><a href="#dockerhub">6. Déploiement Docker Hub</a></li>
+            <li><a href="#conclusion">7. Conclusion</a></li>
+            <li><a href="#annexes">8. Annexes</a></li>
+        </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 1 : INTRODUCTION -->
+    <section id="introduction">
+        <h2>1. INTRODUCTION</h2>
+
+        <h3>1.1 Contexte du Projet</h3>
+        <p>
+            L'application <strong>Rent Cars</strong> est une plateforme web de location de voitures développée avec Symfony 7.
+            Elle permet aux utilisateurs de consulter un catalogue de véhicules, effectuer des réservations, et comparer
+            différents modèles. Une interface d'administration permet la gestion complète des véhicules, catégories,
+            marques et réservations.
+        </p>
+
+        <h3>1.2 Objectifs DevOps</h3>
+        <p>L'objectif de ce projet est de mettre en place une infrastructure DevOps complète incluant :</p>
+        <ul>
+            <li><strong>Containerisation</strong> de l'application avec Docker</li>
+            <li><strong>Orchestration</strong> des services avec Docker Compose</li>
+            <li><strong>Tests automatisés</strong> (unitaires, intégration, fonctionnels)</li>
+            <li><strong>Pipeline CI/CD</strong> avec GitLab</li>
+            <li><strong>Déploiement continu</strong> sur Docker Hub</li>
+        </ul>
+
+        <h3>1.3 Fonctionnalités de l'Application</h3>
+        <ul>
+            <li>✅ <strong>Catalogue de véhicules</strong> avec filtres et pagination</li>
+            <li>✅ <strong>Système de réservation</strong> avec validation de dates</li>
+            <li>✅ <strong>Comparaison de véhicules</strong> (jusqu'à 3 véhicules)</li>
+            <li>✅ <strong>Chatbot intelligent</strong> pour assistance client</li>
+            <li>✅ <strong>Interface administrateur</strong> pour gestion complète</li>
+            <li>✅ <strong>Mode sombre/clair</strong> pour meilleure UX</li>
+            <li>✅ <strong>Authentification</strong> et gestion des utilisateurs</li>
+        </ul>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 2 : ARCHITECTURE -->
+    <section id="architecture">
+        <h2>2. ARCHITECTURE DU PROJET</h2>
+
+        <h3>2.1 Architecture Applicative</h3>
+        <div class="architecture-box">
+            <h4>Architecture 3-Tiers</h4>
+            <pre>
+┌─────────────────────────────────────────────────────────────┐
+│                    ARCHITECTURE 3-TIERS                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌─────────────┐     ┌─────────────┐     ┌──────────────┐  │
+│  │             │     │             │     │              │  │
+│  │   NGINX     │────▶│   PHP-FPM   │────▶│  PostgreSQL  │  │
+│  │  (port 8080)│     │   (Symfony) │     │  (port 5432) │  │
+│  │             │     │             │     │              │  │
+│  └─────────────┘     └─────────────┘     └──────────────┘  │
+│   Serveur Web        Application Web     Base de Données   │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
+            </pre>
+        </div>
+
+        <h3>2.2 Structure des Dossiers</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 1 : Structure du Projet</strong>
+            <p>Insérer ici la capture d'écran : <code>01_structure_projet.png</code></p>
+            <p><em>Vue de l'arborescence du projet dans l'IDE montrant les dossiers src/, tests/, docker/, config/</em></p>
+        </div>
+
+        <div class="info-box">
+            <h4>Organisation du Code</h4>
+            <ul>
+                <li><code>src/</code> : Code source Symfony (Controllers, Entities, Forms, Repositories)</li>
+                <li><code>tests/</code> : Tests automatisés (Unit, Integration, Functional)</li>
+                <li><code>docker/</code> : Configuration Docker (nginx, php)</li>
+                <li><code>config/</code> : Configuration Symfony et services</li>
+                <li><code>templates/</code> : Templates Twig</li>
+                <li><code>public/</code> : Fichiers publics (CSS, JS, images)</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 3 : DOCKERISATION -->
+    <section id="dockerisation">
+        <h2>3. DOCKERISATION</h2>
+
+        <h3>3.1 Stratégie de Containerisation</h3>
+        <p>Nous avons containerisé l'application en utilisant <strong>3 services Docker</strong> :</p>
+        <ol>
+            <li><strong>Nginx</strong> : Serveur web reverse proxy</li>
+            <li><strong>PHP-FPM</strong> : Exécution de l'application Symfony</li>
+            <li><strong>PostgreSQL</strong> : Base de données relationnelle</li>
+        </ol>
+
+        <h3>3.2 Dockerfile</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 2 : Dockerfile</strong>
+            <p>Insérer ici la capture d'écran : <code>02_dockerfile.png</code></p>
+            <p><em>Contenu du Dockerfile montrant l'image de base PHP 8.2-FPM et les extensions</em></p>
+        </div>
+
+        <div class="info-box">
+            <h4>Points clés du Dockerfile :</h4>
+            <ul>
+                <li>✅ Image de base PHP 8.2-FPM légère</li>
+                <li>✅ Extensions PostgreSQL pour Doctrine ORM</li>
+                <li>✅ Composer intégré pour gestion des dépendances</li>
+                <li>✅ Configuration PHP personnalisée</li>
+                <li>✅ Optimisations pour la production</li>
+            </ul>
+        </div>
+
+        <h3>3.3 Docker Compose</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 3 : Docker Compose</strong>
+            <p>Insérer ici la capture d'écran : <code>03_docker_compose.yml</code></p>
+            <p><em>Fichier docker-compose.yml montrant les 3 services (nginx, php, db)</em></p>
+        </div>
+
+        <div class="info-box">
+            <h4>Caractéristiques de l'orchestration :</h4>
+            <ul>
+                <li>✅ Volumes persistants pour la base de données</li>
+                <li>✅ Health checks pour vérifier la disponibilité des services</li>
+                <li>✅ Dépendances entre services correctement gérées</li>
+                <li>✅ Variables d'environnement pour la configuration</li>
+                <li>✅ Port 8080 exposé pour accès externe</li>
+            </ul>
+        </div>
+
+        <h3>3.4 Conteneurs Actifs</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 4 : Conteneurs Docker</strong>
+            <p>Insérer ici la capture d'écran : <code>04_docker_ps.png</code></p>
+            <p><em>Sortie de la commande <code>docker-compose ps</code> montrant les 3 conteneurs UP</em></p>
+        </div>
+
+        <h3>3.5 Application Fonctionnelle</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 5 : Application en Production</strong>
+            <p>Insérer ici la capture d'écran : <code>05_app_running.png</code></p>
+            <p><em>Page d'accueil de l'application accessible sur http://localhost:8080</em></p>
+        </div>
+
+        <div class="success-box">
+            <h4>✅ Résultat</h4>
+            <p>L'application est entièrement containerisée et accessible localement.
+            Les 3 conteneurs communiquent correctement entre eux via le réseau Docker.</p>
+        </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 4 : TESTS -->
+    <section id="tests">
+        <h2>4. TESTS AUTOMATISÉS</h2>
+
+        <h3>4.1 Stratégie de Tests</h3>
+        <p>Nous avons mis en place une suite de tests complète couvrant <strong>3 niveaux</strong> :</p>
+
+        <h4>4.1.1 Tests Unitaires (6 tests)</h4>
+        <p><strong>Objectif :</strong> Tester la logique métier des entités isolément</p>
+        <ul>
+            <li><code>VehiculeTest</code> : Calcul de prix, disponibilité, validation</li>
+            <li><code>ReservationTest</code> : Validation des dates, calcul de durée</li>
+            <li><code>UserTest</code> : Rôles, authentification, validation</li>
+        </ul>
+
+        <h4>4.1.2 Tests d'Intégration (2 tests)</h4>
+        <p><strong>Objectif :</strong> Tester l'interaction avec la base de données</p>
+        <ul>
+            <li><code>VehiculeRepositoryTest</code> : Recherche de véhicules disponibles</li>
+            <li><code>ReservationRepositoryTest</code> : Gestion des réservations</li>
+        </ul>
+
+        <h4>4.1.3 Tests Fonctionnels (2 tests)</h4>
+        <p><strong>Objectif :</strong> Tester les parcours utilisateur complets</p>
+        <ul>
+            <li><code>CatalogueControllerTest</code> : Affichage du catalogue</li>
+            <li><code>ReservationControllerTest</code> : Processus de réservation</li>
+        </ul>
+
+        <h3>4.2 Structure des Tests</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 7 : Structure des Tests</strong>
+            <p>Insérer ici la capture d'écran : <code>07_tests_structure.png</code></p>
+            <p><em>Arborescence du dossier tests/ montrant Unit/, Integration/, Functional/</em></p>
+        </div>
+
+        <h3>4.3 Résultats PHPUnit</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 6 : Résultats PHPUnit</strong>
+            <p>Insérer ici la capture d'écran : <code>06_phpunit_results.png</code></p>
+            <p><em>Sortie de <code>php bin/phpunit</code> montrant tous les tests en succès</em></p>
+        </div>
+
+        <div class="success-box">
+            <h4>✅ Métriques de Tests</h4>
+            <table>
+                <tr>
+                    <th>Métrique</th>
+                    <th>Valeur</th>
+                </tr>
+                <tr>
+                    <td>Tests exécutés</td>
+                    <td class="success">10</td>
+                </tr>
+                <tr>
+                    <td>Assertions validées</td>
+                    <td class="success">10</td>
+                </tr>
+                <tr>
+                    <td>Taux de réussite</td>
+                    <td class="success">100%</td>
+                </tr>
+                <tr>
+                    <td>Temps d'exécution</td>
+                    <td>~2.14s</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 5 : CI/CD -->
+    <section id="cicd">
+        <h2>5. PIPELINE CI/CD GITLAB</h2>
+
+        <h3>5.1 Architecture du Pipeline</h3>
+        <div class="architecture-box">
+            <h4>Pipeline en 4 Stages</h4>
+            <pre>
+┌────────────────────────────────────────────────────────────┐
+│                    GITLAB CI/CD PIPELINE                    │
+├────────────────────────────────────────────────────────────┤
+│                                                              │
+│  STAGE 1: INSTALL                                           │
+│  ┌────────────────────────────────────────┐                │
+│  │  • composer install                    │                │
+│  │  • Cache vendor/                       │                │
+│  │  • Artifacts pour stages suivants      │                │
+│  └────────────────────────────────────────┘                │
+│                      ▼                                      │
+│  STAGE 2: TEST (parallèle)                                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│  │ Unit Tests   │  │ Integration  │  │ Code Quality │    │
+│  │              │  │ Tests        │  │              │    │
+│  └──────────────┘  └──────────────┘  └──────────────┘    │
+│                      ▼                                      │
+│  STAGE 3: BUILD                                            │
+│  ┌────────────────────────────────────────┐                │
+│  │  • docker build                        │                │
+│  │  • docker tag                          │                │
+│  └────────────────────────────────────────┘                │
+│                      ▼                                      │
+│  STAGE 4: DOCKER                                           │
+│  ┌────────────────────────────────────────┐                │
+│  │  • docker login (Docker Hub)           │                │
+│  │  • docker push                         │                │
+│  │  • Only: main branch                   │                │
+│  └────────────────────────────────────────┘                │
+│                                                              │
+└────────────────────────────────────────────────────────────┘
+            </pre>
+        </div>
+
+        <h3>5.2 Configuration GitLab CI</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 8 : Fichier .gitlab-ci.yml</strong>
+            <p>Insérer ici la capture d'écran : <code>08_gitlab_ci_file.png</code></p>
+            <p><em>Contenu du fichier .gitlab-ci.yml montrant les 4 stages</em></p>
+        </div>
+
+        <h3>5.3 Variables CI/CD</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 9 : Variables CI/CD GitLab</strong>
+            <p>Insérer ici la capture d'écran : <code>09_gitlab_variables.png</code></p>
+            <p><em>Configuration des variables DOCKER_HUB_USERNAME et DOCKER_HUB_PASSWORD (masquées)</em></p>
+        </div>
+
+        <div class="info-box">
+            <h4>Variables Configurées</h4>
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                    <th>Protected</th>
+                    <th>Masked</th>
+                </tr>
+                <tr>
+                    <td><code>DOCKER_HUB_USERNAME</code></td>
+                    <td>Nom d'utilisateur Docker Hub</td>
+                    <td>✅</td>
+                    <td>❌</td>
+                </tr>
+                <tr>
+                    <td><code>DOCKER_HUB_PASSWORD</code></td>
+                    <td>Token d'accès Docker Hub</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+            </table>
+        </div>
+
+        <h3>5.4 Exécution du Pipeline</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 10 : Vue d'ensemble du Pipeline</strong>
+            <p>Insérer ici la capture d'écran : <code>10_pipeline_overview.png</code></p>
+            <p><em>Pipeline GitLab montrant les 4 stages tous en succès (vert)</em></p>
+        </div>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 11 : Job Tests Réussi</strong>
+            <p>Insérer ici la capture d'écran : <code>11_job_tests.png</code></p>
+            <p><em>Détail du job unit_tests ou integration_tests avec logs</em></p>
+        </div>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 12 : Job Build Docker Réussi</strong>
+            <p>Insérer ici la capture d'écran : <code>12_job_build.png</code></p>
+            <p><em>Détail du job build_docker_image avec commandes docker</em></p>
+        </div>
+
+        <div class="success-box">
+            <h4>✅ Pipeline Fonctionnel</h4>
+            <p>Le pipeline CI/CD est entièrement automatisé :</p>
+            <ul>
+                <li>✅ Déclenchement automatique à chaque push</li>
+                <li>✅ Tests exécutés en parallèle</li>
+                <li>✅ Build Docker uniquement sur main/develop</li>
+                <li>✅ Push Docker Hub avec validation manuelle</li>
+                <li>✅ Cache optimisé pour rapidité</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 6 : DOCKER HUB -->
+    <section id="dockerhub">
+        <h2>6. DÉPLOIEMENT DOCKER HUB</h2>
+
+        <h3>6.1 Processus de Déploiement</h3>
+        <div class="info-box">
+            <h4>Workflow de Déploiement</h4>
+            <ol>
+                <li><strong>Push</strong> du code sur la branche <code>main</code></li>
+                <li><strong>Pipeline automatique</strong> : install → test → build</li>
+                <li><strong>Validation manuelle</strong> du déploiement (stage docker)</li>
+                <li><strong>Push</strong> de l'image vers Docker Hub</li>
+                <li><strong>Disponibilité</strong> publique de l'image</li>
+            </ol>
+        </div>
+
+        <h3>6.2 Image sur Docker Hub</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 13 : Repository Docker Hub</strong>
+            <p>Insérer ici la capture d'écran : <code>13_dockerhub_image.png</code></p>
+            <p><em>Page Docker Hub montrant le repository avec tags latest et commit SHA</em></p>
+        </div>
+
+        <h3>6.3 Tags Docker</h3>
+        <table>
+            <tr>
+                <th>Tag</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><code>latest</code></td>
+                <td>Dernière version stable de l'application</td>
+            </tr>
+            <tr>
+                <td><code>abc123def</code></td>
+                <td>Version spécifique identifiée par le SHA du commit</td>
+            </tr>
+        </table>
+
+        <h3>6.4 Pull de l'Image</h3>
+
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 14 : Docker Pull Local</strong>
+            <p>Insérer ici la capture d'écran : <code>14_docker_pull.png</code></p>
+            <p><em>Commande <code>docker pull username/rent_cars:latest</code> réussie</em></p>
+        </div>
+
+        <div class="success-box">
+            <h4>✅ Déploiement Réussi</h4>
+            <p>L'image Docker est maintenant disponible publiquement et peut être déployée sur n'importe quel environnement supportant Docker.</p>
+            <pre><code># Commande pour utiliser l'image
+docker run -d -p 8080:80 username/rent_cars:latest</code></pre>
+        </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 7 : CONCLUSION -->
+    <section id="conclusion">
+        <h2>7. CONCLUSION</h2>
+
+        <h3>7.1 Objectifs Atteints</h3>
+        <table>
+            <tr>
+                <th>Objectif</th>
+                <th>Status</th>
+                <th>Commentaire</th>
+            </tr>
+            <tr>
+                <td>Dockerisation</td>
+                <td class="success">✅ Réussi</td>
+                <td>3 conteneurs opérationnels (nginx, php, postgres)</td>
+            </tr>
+            <tr>
+                <td>Tests automatisés</td>
+                <td class="success">✅ Réussi</td>
+                <td>10 tests, 100% de réussite</td>
+            </tr>
+            <tr>
+                <td>Pipeline CI/CD</td>
+                <td class="success">✅ Réussi</td>
+                <td>4 stages configurés et fonctionnels</td>
+            </tr>
+            <tr>
+                <td>Docker Hub</td>
+                <td class="success">✅ Réussi</td>
+                <td>Image publiée et accessible</td>
+            </tr>
+            <tr>
+                <td>Documentation</td>
+                <td class="success">✅ Réussi</td>
+                <td>Rapport complet avec screenshots</td>
+            </tr>
+        </table>
+
+        <h3>7.2 Compétences Démontrées</h3>
+        <ul>
+            <li>✅ <strong>Infrastructure as Code</strong> avec Docker et Docker Compose</li>
+            <li>✅ <strong>Continuous Integration</strong> avec GitLab CI</li>
+            <li>✅ <strong>Continuous Delivery</strong> vers Docker Hub</li>
+            <li>✅ <strong>Test-Driven Development</strong> avec PHPUnit</li>
+            <li>✅ <strong>DevOps Best Practices</strong> (caching, stages, reproductibilité)</li>
+        </ul>
+
+        <h3>7.3 Améliorations Futures</h3>
+        <div class="info-box">
+            <h4>Pistes d'amélioration</h4>
+            <ul>
+                <li><strong>Monitoring</strong> : Ajout de Prometheus + Grafana</li>
+                <li><strong>Sécurité</strong> : Scan de vulnérabilités avec Trivy</li>
+                <li><strong>Performance</strong> : Mise en cache Redis</li>
+                <li><strong>Scalabilité</strong> : Déploiement Kubernetes</li>
+                <li><strong>Observabilité</strong> : Logs centralisés (ELK Stack)</li>
+            </ul>
+        </div>
+
+        <h3>7.4 Retour d'Expérience</h3>
+        <p>
+            Ce projet a permis de mettre en pratique l'ensemble du cycle DevOps, de la containerisation
+            au déploiement continu. L'approche infrastructure-as-code garantit la reproductibilité de
+            l'environnement et facilite la collaboration en équipe. Les tests automatisés assurent la
+            qualité du code à chaque modification, tandis que le pipeline CI/CD permet des déploiements
+            rapides et fiables.
+        </p>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 8 : ANNEXES -->
+    <section id="annexes">
+        <h2>8. ANNEXES</h2>
+
+        <h3>8.1 Commandes Utiles</h3>
+
+        <h4>Docker</h4>
+        <pre><code># Démarrer les conteneurs
+docker-compose up -d
+
+# Arrêter les conteneurs
+docker-compose down
+
+# Voir les logs
+docker-compose logs -f
+
+# Shell dans le conteneur PHP
+docker-compose exec php bash
+
+# Reconstruire les images
+docker-compose build --no-cache</code></pre>
+
+        <h4>Symfony</h4>
+        <pre><code># Vider le cache
+php bin/console cache:clear
+
+# Exécuter les migrations
+php bin/console doctrine:migrations:migrate
+
+# Charger les fixtures
+php bin/console doctrine:fixtures:load
+
+# Créer un utilisateur
+php bin/console app:create-user</code></pre>
+
+        <h4>Tests</h4>
+        <pre><code># Tous les tests
+php bin/phpunit
+
+# Tests unitaires uniquement
+php bin/phpunit tests/Unit
+
+# Tests d'intégration
+php bin/phpunit tests/Integration
+
+# Tests avec couverture
+php bin/phpunit --coverage-html coverage</code></pre>
+
+        <h4>Git</h4>
+        <pre><code># Ajouter les modifications
+git add .
+
+# Commit
+git commit -m "Description des modifications"
+
+# Push vers GitLab
+git push origin main
+
+# Voir l'historique
+git log --oneline</code></pre>
+
+        <h3>8.2 Ressources</h3>
+        <ul>
+            <li><strong>Documentation Symfony</strong> : <a href="https://symfony.com/doc">https://symfony.com/doc</a></li>
+            <li><strong>Docker Documentation</strong> : <a href="https://docs.docker.com">https://docs.docker.com</a></li>
+            <li><strong>GitLab CI/CD</strong> : <a href="https://docs.gitlab.com/ee/ci">https://docs.gitlab.com/ee/ci</a></li>
+            <li><strong>PHPUnit</strong> : <a href="https://phpunit.de/documentation.html">https://phpunit.de/documentation.html</a></li>
+            <li><strong>Docker Hub</strong> : <a href="https://hub.docker.com">https://hub.docker.com</a></li>
+        </ul>
+
+        <h3>8.3 Contact</h3>
+        <div class="metadata">
+            <p><strong>Projet</strong> : Rent Cars - Location de Voitures</p>
+            <p><strong>Étudiant</strong> : [VOTRE NOM]</p>
+            <p><strong>Email</strong> : [votre.email@example.com]</p>
+            <p><strong>Date de rendu</strong> : 9 Janvier 2026</p>
+        </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- BONUS : SCREENSHOTS APPLICATION -->
+    <section>
+        <h2>BONUS : FONCTIONNALITÉS DE L'APPLICATION</h2>
+
+        <h3>Catalogue de Véhicules</h3>
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 15 : Page Catalogue</strong>
+            <p>Insérer ici la capture d'écran : <code>15_catalogue.png</code></p>
+            <p><em>Page catalogue avec liste de véhicules, filtres et pagination</em></p>
+        </div>
+
+        <h3>Comparaison de Véhicules</h3>
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 16 : Comparaison</strong>
+            <p>Insérer ici la capture d'écran : <code>16_compare.png</code></p>
+            <p><em>Tableau de comparaison de 2-3 véhicules avec caractéristiques</em></p>
+        </div>
+
+        <h3>Interface Administrateur</h3>
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 17 : Admin</strong>
+            <p>Insérer ici la capture d'écran : <code>17_admin.png</code></p>
+            <p><em>Tableau de bord administrateur avec gestion des véhicules</em></p>
+        </div>
+
+        <h3>Modes Clair/Sombre</h3>
+        <div class="screenshot-placeholder">
+            <strong>📸 SCREENSHOT 18 : Dark Mode</strong>
+            <p>Insérer ici la capture d'écran : <code>18_dark_mode.png</code></p>
+            <p><em>Comparaison du design en mode clair et mode sombre</em></p>
+        </div>
+    </section>
+
+    <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px;">
+        <h2 style="color: white; margin: 0;">FIN DU RAPPORT</h2>
+        <p style="margin-top: 10px;">Projet Rent Cars - DevOps 2026</p>
+    </div>
+</body>
+</html>
+

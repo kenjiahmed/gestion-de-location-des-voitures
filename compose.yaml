@@ -1,11 +1,46 @@
-
 services:
-###> doctrine/doctrine-bundle ###
+  # PHP-FPM Service
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: rent_cars_php
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./var:/var/www/html/var
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=16&charset=utf8
+      APP_ENV: ${APP_ENV:-dev}
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - rent_cars_network
+
+  # Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: rent_cars_nginx
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./public:/var/www/html/public:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+    networks:
+      - rent_cars_network
+
+  # PostgreSQL Database Service
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
+    container_name: rent_cars_db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
       POSTGRES_USER: ${POSTGRES_USER:-app}
     healthcheck:
@@ -15,11 +50,14 @@ services:
       start_period: 60s
     volumes:
       - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+    ports:
+      - "5432:5432"
+    networks:
+      - rent_cars_network
 
 volumes:
-###> doctrine/doctrine-bundle ###
   database_data:
-###< doctrine/doctrine-bundle ###
+
+networks:
+  rent_cars_network:
+    driver: bridge

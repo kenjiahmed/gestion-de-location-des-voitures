@@ -5,12 +5,12 @@
 /public/bundles/
 
 # Symfony and IDE
-/.env
 /.env.local
 /.env.*.local
 /.idea/
 /.vscode/
 /.phpunit.result.cache
+.phpunit.cache/
 
 # Symfony var folders
 /var/cache/
@@ -19,8 +19,8 @@
 /var/test/
 /public/uploads/
 
-# Composer
-composer.lock
+# Composer - Keep lock for production consistency
+# composer.lock
 
 # OS
 Thumbs.db
@@ -29,8 +29,10 @@ Thumbs.db
 # Logs
 *.log
 
-# Database
+# Database (SQLite - not used anymore)
 /data_dev.db
+*.db
+var/data*.db
 
 # npm
 package-lock.json
@@ -41,5 +43,14 @@ package-lock.json
 # Ignore PHPStorm misc
 /.phpstorm.meta.php
 
-# Keep README and other project files
+# Docker volumes and data
+/docker/db/data/
 
+# Test coverage reports
+/coverage/
+/clover.xml
+/.phpunit.cache/
+
+# Keep important files
+!/.env
+!/.env.test

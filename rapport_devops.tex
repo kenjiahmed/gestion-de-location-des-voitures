@@ -1,0 +1,772 @@
+% ===================================================================
+% RAPPORT DEVOPS - PROJET RENT CARS
+% Application de Location de Voitures avec Docker + GitLab CI/CD
+% ===================================================================
+% Auteur: [VOTRE NOM]
+% Date: 9 Janvier 2026
+% Technologie: Symfony 7 + PHP 8.2 + PostgreSQL 15 + Docker
+% ===================================================================
+
+\documentclass[12pt,a4paper]{article}
+
+% ===================================================================
+% PACKAGES ESSENTIELS
+% ===================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{fontawesome5}
+\usepackage{minted}
+
+% ===================================================================
+% CONFIGURATION DE LA PAGE
+% ===================================================================
+\geometry{
+    margin=2.5cm,
+    top=3cm,
+    bottom=3cm
+}
+
+% ===================================================================
+% CONFIGURATION DES COULEURS
+% ===================================================================
+\definecolor{primarycolor}{RGB}{52, 152, 219}
+\definecolor{secondarycolor}{RGB}{44, 62, 80}
+\definecolor{accentcolor}{RGB}{46, 204, 113}
+\definecolor{errorcolor}{RGB}{231, 76, 60}
+\definecolor{warningcolor}{RGB}{243, 156, 18}
+\definecolor{codecolor}{RGB}{44, 62, 80}
+\definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{codebg}{RGB}{40, 44, 52}
+
+% ===================================================================
+% CONFIGURATION DES LIENS HYPERTEXTE
+% ===================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primarycolor,
+    filecolor=primarycolor,
+    urlcolor=primarycolor,
+    citecolor=primarycolor,
+    bookmarks=true,
+    bookmarksopen=true,
+    pdftitle={Rapport DevOps - Rent Cars},
+    pdfauthor={Étudiant Symfony},
+    pdfsubject={DevOps avec Docker et GitLab CI/CD}
+}
+
+% ===================================================================
+% CONFIGURATION EN-TÊTE ET PIED DE PAGE
+% ===================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small \textcolor{primarycolor}{Rapport DevOps - Rent Cars}}
+\fancyhead[R]{\small \textcolor{secondarycolor}{\thepage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{primarycolor}\leaders\hrule height \headrulewidth\hfill}}
+
+% Configuration des titres de section
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{primarycolor}}
+  {\thesection}{1em}{}[\titlerule]
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{secondarycolor}}
+  {\thesubsection}{1em}{}
+
+% Configuration du code
+\lstset{
+    backgroundcolor=\color{lightgray},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    captionpos=b,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{primarycolor},
+    commentstyle=\color{gray},
+    stringstyle=\color{accentcolor}
+}
+
+% Boîtes personnalisées
+\newtcolorbox{infobox}{
+    colback=blue!5!white,
+    colframe=primarycolor,
+    arc=3mm,
+    boxrule=1pt
+}
+
+\newtcolorbox{successbox}{
+    colback=green!5!white,
+    colframe=accentcolor,
+    arc=3mm,
+    boxrule=1pt
+}
+
+\newtcolorbox{warningbox}{
+    colback=yellow!5!white,
+    colframe=orange,
+    arc=3mm,
+    boxrule=1pt
+}
+
+% Début du document
+\begin{document}
+
+% PAGE DE GARDE
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries\color{primarycolor} RAPPORT DEVOPS\par}
+    \vspace{1cm}
+    {\LARGE Projet Rent Cars\par}
+    {\large Application de Location de Voitures\par}
+
+    \vspace{2cm}
+
+    \begin{tikzpicture}
+        \fill[primarycolor] (0,0) circle (3cm);
+        \node[white] at (0,0.5) {\Huge\bfseries DevOps};
+        \node[white] at (0,-0.5) {\Large 2026};
+    \end{tikzpicture}
+
+    \vspace{2cm}
+
+    {\Large\textbf{Étudiant:} [VOTRE NOM]\par}
+    \vspace{0.5cm}
+    {\large\textbf{Date:} 9 Janvier 2026\par}
+
+    \vspace{2cm}
+
+    {\large\textbf{Stack Technique}\par}
+    \vspace{0.3cm}
+    Symfony 7 | PHP 8.3 | PostgreSQL 15 | Docker | GitLab CI/CD
+
+    \vfill
+
+    {\large Année Universitaire 2025-2026\par}
+\end{titlepage}
+
+% TABLE DES MATIÈRES
+\newpage
+\tableofcontents
+\newpage
+
+% SECTION 1: INTRODUCTION
+\section{Introduction}
+
+\subsection{Contexte du Projet}
+
+L'application \textbf{Rent Cars} est une plateforme web de location de voitures développée avec Symfony 7. Elle permet aux utilisateurs de consulter un catalogue de véhicules, effectuer des réservations, et comparer différents modèles. Une interface d'administration permet la gestion complète des véhicules, catégories, marques et réservations.
+
+\subsection{Objectifs DevOps}
+
+L'objectif de ce projet est de mettre en place une infrastructure DevOps complète incluant :
+
+\begin{itemize}[leftmargin=2cm]
+    \item[\textcolor{primarycolor}{$\blacksquare$}] \textbf{Containerisation} de l'application avec Docker
+    \item[\textcolor{primarycolor}{$\blacksquare$}] \textbf{Orchestration} des services avec Docker Compose
+    \item[\textcolor{primarycolor}{$\blacksquare$}] \textbf{Tests automatisés} (unitaires, intégration, fonctionnels)
+    \item[\textcolor{primarycolor}{$\blacksquare$}] \textbf{Pipeline CI/CD} avec GitLab
+    \item[\textcolor{primarycolor}{$\blacksquare$}] \textbf{Déploiement continu} sur Docker Hub
+\end{itemize}
+
+\subsection{Fonctionnalités de l'Application}
+
+\begin{successbox}
+\textbf{Fonctionnalités principales :}
+\begin{itemize}
+    \item Catalogue de véhicules avec filtres et pagination
+    \item Système de réservation avec validation de dates
+    \item Comparaison de véhicules (jusqu'à 3 véhicules)
+    \item Chatbot intelligent pour assistance client
+    \item Interface administrateur pour gestion complète
+    \item Mode sombre/clair pour meilleure UX
+    \item Authentification et gestion des utilisateurs
+\end{itemize}
+\end{successbox}
+
+\newpage
+
+% SECTION 2: ARCHITECTURE
+\section{Architecture du Projet}
+
+\subsection{Architecture Applicative}
+
+L'application utilise une architecture 3-tiers comprenant :
+
+\begin{enumerate}
+    \item \textbf{Nginx} : Serveur web et reverse proxy (port 8080)
+    \item \textbf{PHP-FPM} : Exécution de l'application Symfony
+    \item \textbf{PostgreSQL} : Base de données relationnelle (port 5432)
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=3cm, auto]
+        % Styles
+        \tikzstyle{box} = [rectangle, draw, fill=blue!20, text width=3cm, text centered, rounded corners, minimum height=2cm]
+        \tikzstyle{arrow} = [thick,->,>=stealth]
+
+        % Nodes
+        \node [box, fill=orange!20] (nginx) {Nginx\\Port 8080};
+        \node [box, right of=nginx, fill=blue!20] (php) {PHP-FPM\\Symfony 7};
+        \node [box, right of=php, fill=green!20] (db) {PostgreSQL\\Port 5432};
+
+        % Arrows
+        \draw [arrow] (nginx) -- (php);
+        \draw [arrow] (php) -- (db);
+
+        % Labels
+        \node [below of=nginx, node distance=2.5cm] {Serveur Web};
+        \node [below of=php, node distance=2.5cm] {Application};
+        \node [below of=db, node distance=2.5cm] {Base de Données};
+    \end{tikzpicture}
+    \caption{Architecture 3-Tiers de l'application}
+\end{figure}
+
+\subsection{Structure du Projet}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/01_structure_projet.png}}
+    \caption{Structure complète du projet dans l'IDE}
+    \label{fig:structure}
+\end{figure}
+
+\begin{infobox}
+\textbf{Organisation du code :}
+\begin{itemize}
+    \item \texttt{src/} : Code source Symfony (Controllers, Entities, Forms, Repositories)
+    \item \texttt{tests/} : Tests automatisés (Unit, Integration, Functional)
+    \item \texttt{docker/} : Configuration Docker (nginx, php)
+    \item \texttt{config/} : Configuration Symfony et services
+    \item \texttt{templates/} : Templates Twig
+    \item \texttt{public/} : Fichiers publics (CSS, JS, images)
+\end{itemize}
+\end{infobox}
+
+\newpage
+
+% SECTION 3: DOCKERISATION
+\section{Dockerisation}
+
+\subsection{Stratégie de Containerisation}
+
+Nous avons containerisé l'application en utilisant \textbf{3 services Docker} orchestrés avec Docker Compose :
+
+\begin{enumerate}
+    \item \textbf{Nginx} : Serveur web reverse proxy
+    \item \textbf{PHP-FPM} : Exécution de l'application Symfony
+    \item \textbf{PostgreSQL 15} : Base de données relationnelle
+\end{enumerate}
+
+\subsection{Dockerfile}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/02_dockerfile.png}}
+    \caption{Contenu du Dockerfile de production}
+    \label{fig:dockerfile}
+\end{figure}
+
+\begin{infobox}
+\textbf{Points clés du Dockerfile :}
+\begin{itemize}
+    \item Image de base PHP 8.2-FPM légère et optimisée
+    \item Extensions PostgreSQL pour Doctrine ORM
+    \item Composer intégré pour gestion des dépendances
+    \item Configuration PHP personnalisée (custom.ini)
+    \item Optimisations pour la production (OPcache, etc.)
+\end{itemize}
+\end{infobox}
+
+\subsection{Docker Compose}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/03_docker_compose.png}}
+    \caption{Fichier docker-compose.yml avec les 3 services}
+    \label{fig:dockercompose}
+\end{figure}
+
+\begin{successbox}
+\textbf{Caractéristiques de l'orchestration :}
+\begin{itemize}
+    \item Volumes persistants pour la base de données PostgreSQL
+    \item Health checks pour vérifier la disponibilité des services
+    \item Dépendances entre services correctement gérées
+    \item Variables d'environnement pour configuration flexible
+    \item Port 8080 exposé pour accès externe
+    \item Réseau Docker isolé pour sécurité
+\end{itemize}
+\end{successbox}
+
+\subsection{Conteneurs Actifs}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/04_docker_ps.png}}
+    \caption{Sortie de la commande \texttt{docker-compose ps} montrant les 3 conteneurs UP}
+    \label{fig:dockerps}
+\end{figure}
+
+Le résultat montre que tous les conteneurs sont opérationnels :
+\begin{itemize}
+    \item \texttt{rent\_cars\_nginx} : UP, port 8080 accessible
+    \item \texttt{rent\_cars\_php} : UP, traitement des requêtes Symfony
+    \item \texttt{rent\_cars\_db} : UP (healthy), base de données PostgreSQL
+\end{itemize}
+
+\subsection{Application Fonctionnelle}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/05_app_running.png}}
+    \caption{Application accessible sur http://localhost:8080}
+    \label{fig:apprunning}
+\end{figure}
+
+\begin{successbox}
+\textbf{Résultat :}\\
+L'application est entièrement containerisée et accessible localement. Les 3 conteneurs communiquent correctement entre eux via le réseau Docker. La stack complète (Nginx + PHP-FPM + PostgreSQL) est opérationnelle.
+\end{successbox}
+
+\newpage
+
+% SECTION 4: TESTS AUTOMATISÉS
+\section{Tests Automatisés}
+
+\subsection{Stratégie de Tests}
+
+Nous avons mis en place une suite de tests complète couvrant \textbf{3 niveaux} de tests selon la pyramide de tests :
+
+\begin{enumerate}
+    \item \textbf{Tests Unitaires} (6 tests) : Logique métier des entités isolément
+    \item \textbf{Tests d'Intégration} (2 tests) : Interaction avec la base de données
+    \item \textbf{Tests Fonctionnels} (2 tests) : Parcours utilisateur complets
+\end{enumerate}
+
+\subsection{Tests Unitaires}
+
+Les tests unitaires vérifient la logique métier des entités principales :
+
+\begin{itemize}
+    \item \texttt{VehiculeTest} : Calcul de prix, disponibilité, validation des données
+    \item \texttt{ReservationTest} : Validation des dates, calcul de durée, statuts
+    \item \texttt{UserTest} : Rôles, authentification, validation des utilisateurs
+\end{itemize}
+
+\subsection{Tests d'Intégration}
+
+Les tests d'intégration vérifient l'interaction avec la base de données PostgreSQL :
+
+\begin{itemize}
+    \item \texttt{VehiculeRepositoryTest} : Recherche de véhicules disponibles
+    \item \texttt{ReservationRepositoryTest} : Gestion des réservations, requêtes complexes
+\end{itemize}
+
+\subsection{Tests Fonctionnels}
+
+Les tests fonctionnels simulent des parcours utilisateur complets :
+
+\begin{itemize}
+    \item \texttt{CatalogueControllerTest} : Navigation dans le catalogue
+    \item \texttt{ReservationControllerTest} : Processus complet de réservation
+\end{itemize}
+
+\subsection{Structure des Tests}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.7\textwidth]{screenshots/07_tests_structure.png}}
+    \caption{Arborescence du dossier tests/ avec Unit/, Integration/, Functional/}
+    \label{fig:testsstructure}
+\end{figure}
+
+\subsection{Résultats PHPUnit}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/06_phpunit_results.png}}
+    \caption{Sortie de la commande \texttt{php bin/phpunit} montrant tous les tests en succès}
+    \label{fig:phpunit}
+\end{figure}
+
+\begin{successbox}
+\textbf{Métriques de Tests :}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Métrique} & \textbf{Valeur} \\
+\midrule
+Tests exécutés & \textcolor{accentcolor}{10} \\
+Assertions validées & \textcolor{accentcolor}{10} \\
+Taux de réussite & \textcolor{accentcolor}{100\%} \\
+Temps d'exécution & $\sim$2.14s \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{successbox}
+
+\newpage
+
+% SECTION 5: PIPELINE CI/CD
+\section{Pipeline CI/CD GitLab}
+
+\subsection{Architecture du Pipeline}
+
+Le pipeline CI/CD GitLab est organisé en \textbf{4 stages} exécutés séquentiellement :
+
+\begin{enumerate}
+    \item \textbf{Install} : Installation des dépendances (Composer)
+    \item \textbf{Test} : Exécution des tests (unitaires, intégration, qualité)
+    \item \textbf{Build} : Construction de l'image Docker
+    \item \textbf{Docker} : Publication sur Docker Hub
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=2.5cm, auto]
+        \tikzstyle{stage} = [rectangle, draw, fill=blue!20, text width=3cm, text centered, rounded corners, minimum height=1.5cm]
+        \tikzstyle{arrow} = [thick,->,>=stealth]
+
+        \node [stage, fill=yellow!30] (install) {INSTALL\\composer install};
+        \node [stage, below of=install, fill=blue!30] (test) {TEST\\unit + integration};
+        \node [stage, below of=test, fill=orange!30] (build) {BUILD\\docker build};
+        \node [stage, below of=build, fill=green!30] (docker) {DOCKER\\docker push};
+
+        \draw [arrow] (install) -- (test);
+        \draw [arrow] (test) -- (build);
+        \draw [arrow] (build) -- (docker);
+    \end{tikzpicture}
+    \caption{Pipeline CI/CD en 4 stages}
+\end{figure}
+
+\subsection{Configuration GitLab CI}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/08_gitlab_ci_file.png}}
+    \caption{Fichier .gitlab-ci.yml montrant les 4 stages et les jobs}
+    \label{fig:gitlabci}
+\end{figure}
+
+\begin{infobox}
+\textbf{Points clés du pipeline :}
+\begin{itemize}
+    \item Déclenchement automatique à chaque push
+    \item Cache Composer pour optimiser les builds
+    \item Tests exécutés en parallèle (unit, integration, quality)
+    \item Build Docker uniquement sur branches main/develop
+    \item Push Docker Hub avec validation manuelle
+    \item Artifacts conservés entre les stages
+\end{itemize}
+\end{infobox}
+
+\subsection{Variables CI/CD}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/09_gitlab_variables.png}}
+    \caption{Configuration des variables CI/CD (DOCKER\_HUB\_USERNAME et PASSWORD masqués)}
+    \label{fig:variables}
+\end{figure}
+
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Variable} & \textbf{Description} & \textbf{Protected} & \textbf{Masked} \\
+\midrule
+DOCKER\_HUB\_USERNAME & Username Docker Hub & \checkmark & - \\
+DOCKER\_HUB\_PASSWORD & Token d'accès Docker Hub & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Exécution du Pipeline}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/10_pipeline_overview.png}}
+    \caption{Pipeline GitLab complet avec les 4 stages tous en succès (vert)}
+    \label{fig:pipeline}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/11_job_tests.png}}
+    \caption{Détail du job de tests montrant les logs et le status "passed"}
+    \label{fig:jobtests}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/12_job_build.png}}
+    \caption{Détail du job build\_docker\_image avec commandes docker}
+    \label{fig:jobbuild}
+\end{figure}
+
+\begin{successbox}
+\textbf{Pipeline Fonctionnel :}
+\begin{itemize}
+    \item Déclenchement automatique à chaque push
+    \item Tests exécutés en parallèle pour rapidité
+    \item Build Docker uniquement sur branches autorisées
+    \item Push Docker Hub avec validation manuelle pour sécurité
+    \item Durée totale : $\sim$3-5 minutes
+\end{itemize}
+\end{successbox}
+
+\newpage
+
+% SECTION 6: DÉPLOIEMENT DOCKER HUB
+\section{Déploiement Docker Hub}
+
+\subsection{Processus de Déploiement}
+
+Le déploiement sur Docker Hub suit un workflow automatisé :
+
+\begin{enumerate}
+    \item \textbf{Push} du code sur la branche \texttt{main}
+    \item \textbf{Pipeline automatique} : install $\rightarrow$ test $\rightarrow$ build
+    \item \textbf{Validation manuelle} du stage docker (sécurité)
+    \item \textbf{Push} de l'image vers Docker Hub
+    \item \textbf{Disponibilité} publique de l'image
+\end{enumerate}
+
+\subsection{Image sur Docker Hub}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/13_dockerhub_image.png}}
+    \caption{Repository Docker Hub montrant l'image publiée avec tags}
+    \label{fig:dockerhub}
+\end{figure}
+
+\subsection{Tags Docker}
+
+L'image est disponible avec plusieurs tags pour flexibilité :
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Tag} & \textbf{Description} \\
+\midrule
+\texttt{latest} & Dernière version stable de l'application \\
+\texttt{<commit-sha>} & Version spécifique identifiée par le SHA du commit \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Utilisation de l'Image}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.9\textwidth]{screenshots/14_docker_pull.png}}
+    \caption{Commande \texttt{docker pull} réussie pour télécharger l'image}
+    \label{fig:dockerpull}
+\end{figure}
+
+\begin{lstlisting}[language=bash, caption=Commandes pour utiliser l'image]
+# Telecharger l'image
+docker pull username/rent_cars:latest
+
+# Lancer en local
+docker run -d -p 8080:80 username/rent_cars:latest
+
+# Avec Docker Compose
+services:
+  app:
+    image: username/rent_cars:latest
+    ports:
+      - "8080:80"
+\end{lstlisting}
+
+\begin{successbox}
+\textbf{Déploiement Réussi :}\\
+L'image Docker est maintenant disponible publiquement sur Docker Hub et peut être déployée sur n'importe quel environnement supportant Docker (serveur local, cloud, Kubernetes, etc.).
+\end{successbox}
+
+\newpage
+
+% SECTION 7: CONCLUSION
+\section{Conclusion}
+
+\subsection{Objectifs Atteints}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+\textbf{Objectif} & \textbf{Commentaire} & \textbf{Status} \\
+\midrule
+Dockerisation & 3 conteneurs opérationnels (nginx, php, postgres) & \textcolor{accentcolor}{\checkmark} \\
+Tests automatisés & 10 tests, 100\% de réussite & \textcolor{accentcolor}{\checkmark} \\
+Pipeline CI/CD & 4 stages configurés et fonctionnels & \textcolor{accentcolor}{\checkmark} \\
+Docker Hub & Image publiée et accessible & \textcolor{accentcolor}{\checkmark} \\
+Documentation & Rapport complet avec captures & \textcolor{accentcolor}{\checkmark} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Compétences Démontrées}
+
+\begin{itemize}[leftmargin=2cm]
+    \item[\textcolor{accentcolor}{$\blacksquare$}] \textbf{Infrastructure as Code} avec Docker et Docker Compose
+    \item[\textcolor{accentcolor}{$\blacksquare$}] \textbf{Continuous Integration} avec GitLab CI
+    \item[\textcolor{accentcolor}{$\blacksquare$}] \textbf{Continuous Delivery} vers Docker Hub
+    \item[\textcolor{accentcolor}{$\blacksquare$}] \textbf{Test-Driven Development} avec PHPUnit
+    \item[\textcolor{accentcolor}{$\blacksquare$}] \textbf{DevOps Best Practices} (caching, stages, reproductibilité)
+\end{itemize}
+
+\subsection{Améliorations Futures}
+
+\begin{warningbox}
+\textbf{Pistes d'amélioration :}
+\begin{enumerate}
+    \item \textbf{Monitoring} : Ajout de Prometheus + Grafana pour surveillance
+    \item \textbf{Sécurité} : Scan de vulnérabilités avec Trivy ou Snyk
+    \item \textbf{Performance} : Mise en cache Redis pour sessions et requêtes
+    \item \textbf{Scalabilité} : Déploiement sur Kubernetes avec Helm charts
+    \item \textbf{Observabilité} : Logs centralisés avec ELK Stack (Elasticsearch, Logstash, Kibana)
+\end{enumerate}
+\end{warningbox}
+
+\subsection{Retour d'Expérience}
+
+Ce projet a permis de mettre en pratique l'ensemble du cycle DevOps, de la containerisation au déploiement continu. L'approche infrastructure-as-code garantit la reproductibilité de l'environnement et facilite la collaboration en équipe. Les tests automatisés assurent la qualité du code à chaque modification, tandis que le pipeline CI/CD permet des déploiements rapides et fiables.
+
+\begin{successbox}
+\textbf{Conclusion finale :}\\
+Ce projet démontre une maîtrise complète des pratiques DevOps modernes, de la containerisation avec Docker à l'intégration et au déploiement continus avec GitLab CI/CD. L'infrastructure mise en place est robuste, reproductible et prête pour un environnement de production.
+\end{successbox}
+
+\newpage
+
+% SECTION 8: ANNEXES
+\section{Annexes}
+
+\subsection{Commandes Utiles}
+
+\subsubsection{Docker}
+
+\begin{lstlisting}[language=bash, caption=Commandes Docker courantes]
+# Demarrer les conteneurs
+docker-compose up -d
+
+# Arreter les conteneurs
+docker-compose down
+
+# Voir les logs
+docker-compose logs -f
+
+# Shell dans le conteneur PHP
+docker-compose exec php bash
+
+# Reconstruire les images
+docker-compose build --no-cache
+\end{lstlisting}
+
+\subsubsection{Symfony}
+
+\begin{lstlisting}[language=bash, caption=Commandes Symfony courantes]
+# Vider le cache
+php bin/console cache:clear
+
+# Executer les migrations
+php bin/console doctrine:migrations:migrate
+
+# Charger les fixtures
+php bin/console doctrine:fixtures:load
+
+# Creer un utilisateur
+php bin/console app:create-user
+\end{lstlisting}
+
+\subsubsection{Tests}
+
+\begin{lstlisting}[language=bash, caption=Commandes de tests]
+# Tous les tests
+php bin/phpunit
+
+# Tests unitaires uniquement
+php bin/phpunit tests/Unit
+
+# Tests d'integration
+php bin/phpunit tests/Integration
+
+# Tests avec couverture
+php bin/phpunit --coverage-html coverage
+\end{lstlisting}
+
+\subsubsection{Git}
+
+\begin{lstlisting}[language=bash, caption=Commandes Git courantes]
+# Ajouter les modifications
+git add .
+
+# Commit
+git commit -m "Description des modifications"
+
+# Push vers GitLab
+git push origin main
+
+# Voir l'historique
+git log --oneline
+\end{lstlisting}
+
+\subsection{Ressources}
+
+\begin{itemize}
+    \item \textbf{Documentation Symfony} : \url{https://symfony.com/doc}
+    \item \textbf{Docker Documentation} : \url{https://docs.docker.com}
+    \item \textbf{GitLab CI/CD} : \url{https://docs.gitlab.com/ee/ci}
+    \item \textbf{PHPUnit} : \url{https://phpunit.de/documentation.html}
+    \item \textbf{Docker Hub} : \url{https://hub.docker.com}
+    \item \textbf{PostgreSQL} : \url{https://www.postgresql.org/docs}
+\end{itemize}
+
+\subsection{Contact}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Information} & \textbf{Valeur} \\
+\midrule
+Projet & Rent Cars - Location de Voitures \\
+Étudiant & [VOTRE NOM] \\
+Email & [votre.email@example.com] \\
+Date de rendu & 9 Janvier 2026 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vfill
+
+\begin{center}
+\textcolor{primarycolor}{\rule{0.8\textwidth}{2pt}}\\
+\vspace{0.5cm}
+{\Large\textbf{FIN DU RAPPORT}}\\
+\vspace{0.3cm}
+\textit{Projet réalisé dans le cadre du cours DevOps}\\
+\textit{Année Universitaire 2025-2026}\\
+\textcolor{primarycolor}{\rule{0.8\textwidth}{2pt}}
+\end{center}
+
+\end{document}
+

@@ -1,8 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" role="img">
-  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" fill="#0b5fff" />
-  <path d="M7 21l3-3h4" stroke="#fff" stroke-width="1.6" fill="none"/>
-  <circle cx="8.5" cy="9.2" r="1.1" fill="#fff"/>
-  <circle cx="15.5" cy="9.2" r="1.1" fill="#fff"/>
-  <path d="M9.5 12.2c.6.5 1.4.8 2.5.8s1.9-.3 2.5-.8" stroke="#fff" stroke-width="1.4" fill="none"/>
-</svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="title desc">
+  <title id="title">Chatbot</title>
+  <desc id="desc">Icône de chat moderne, adaptée aux modes clair et sombre, utilise currentColor.</desc>
+  <style>
+    /* Définit une couleur par défaut et adapte au thème sombre si disponible. */
+    :root { color: #0f172a; /* slate-900 - pour mode clair par défaut */ }
+    @media (prefers-color-scheme: dark) {
+      :root { color: #f8fafc; /* near-white pour dark mode */ }
+    }
+    .bubble { fill: none; stroke: currentColor; stroke-width: 2.8; stroke-linejoin: round; stroke-linecap: round; }
+    .mask { fill: currentColor; opacity: 0.08; }
+    .dot { fill: currentColor; }
+  </style>
 
+  <!-- léger fond circulaire (faible opacité) pour visibilité sur backgrounds contrastés -->
+  <circle class="mask" cx="32" cy="32" r="30" />
+
+  <!-- bulle de dialogue stylisée -->
+  <path class="bubble" d="M15 18c0-5.523 5.373-10 12-10s12 4.477 12 10-5.373 10-12 10c-1.6 0-3.14-.226-4.5-.642L16 42l3.9-13.4C16.66 30.32 15 24.7 15 18z" />
+
+  <!-- trois points du chatbot -->
+  <circle class="dot" cx="24.5" cy="26.5" r="2.6" />
+  <circle class="dot" cx="32" cy="26.5" r="2.6" />
+  <circle class="dot" cx="39.5" cy="26.5" r="2.6" />
+
+  <!-- une petite fiche "robot" pour marquer l'IA (forme simple) -->
+  <rect x="40" y="10" width="12" height="6" rx="2" ry="2" class="bubble" />
+  <circle cx="44" cy="13" r="1.1" class="dot" />
+  <circle cx="48" cy="13" r="1.1" class="dot" />
+
+</svg>

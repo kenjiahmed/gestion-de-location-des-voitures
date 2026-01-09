@@ -1,0 +1,10 @@
+###> Docker ignore ###
+.git
+.gitignore
+.env.local
+.env.*.local
+var/
+vendor/
+node_modules/
+###< Docker ignore ###
+

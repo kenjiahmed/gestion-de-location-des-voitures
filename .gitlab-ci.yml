@@ -1,0 +1,121 @@
+stages:
+  - install
+  - test
+  - build
+  - docker
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+# Cache Composer dependencies
+cache:
+  paths:
+    - vendor/
+
+# Installation des dépendances
+install_dependencies:
+  stage: install
+  image: php:8.3-fpm
+  before_script:
+    - apt-get update && apt-get install -y git zip unzip libpq-dev libzip-dev libicu-dev
+    - docker-php-ext-install pdo pdo_pgsql zip intl
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  script:
+    - composer install --no-interaction --prefer-dist --optimize-autoloader
+  artifacts:
+    paths:
+      - vendor/
+    expire_in: 1 hour
+
+# Tests unitaires
+unit_tests:
+  stage: test
+  image: php:8.3-fpm
+  services:
+    - postgres:15
+  variables:
+    POSTGRES_DB: app_test
+    POSTGRES_USER: app
+    POSTGRES_PASSWORD: app
+    DATABASE_URL: "postgresql://app:app@postgres:5432/app_test?serverVersion=15&charset=utf8"
+  before_script:
+    - apt-get update && apt-get install -y git libpq-dev libzip-dev libicu-dev
+    - docker-php-ext-install pdo pdo_pgsql zip intl
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  script:
+    - composer install --no-interaction
+    - php bin/console doctrine:database:create --env=test --if-not-exists
+    - php bin/console doctrine:migrations:migrate --env=test --no-interaction
+    - php bin/phpunit tests/Unit
+  dependencies:
+    - install_dependencies
+
+# Tests d'intégration
+integration_tests:
+  stage: test
+  image: php:8.3-fpm
+  services:
+    - postgres:15
+  variables:
+    POSTGRES_DB: app_test
+    POSTGRES_USER: app
+    POSTGRES_PASSWORD: app
+    DATABASE_URL: "postgresql://app:app@postgres:5432/app_test?serverVersion=15&charset=utf8"
+  before_script:
+    - apt-get update && apt-get install -y git libpq-dev libzip-dev libicu-dev
+    - docker-php-ext-install pdo pdo_pgsql zip intl
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  script:
+    - composer install --no-interaction
+    - php bin/console doctrine:database:create --env=test --if-not-exists
+    - php bin/console doctrine:migrations:migrate --env=test --no-interaction
+    - php bin/console doctrine:fixtures:load --env=test --no-interaction
+    - php bin/phpunit tests/Integration
+  dependencies:
+    - install_dependencies
+
+# Analyse statique du code
+code_quality:
+  stage: test
+  image: php:8.3-fpm
+  before_script:
+    - apt-get update && apt-get install -y git zip unzip
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  script:
+    - composer install --no-interaction
+    - vendor/bin/phpunit --version
+  allow_failure: true
+  dependencies:
+    - install_dependencies
+
+# Construction de l'image Docker
+build_docker_image:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - docker build -t rent_cars:$CI_COMMIT_SHA -f Dockerfile .
+    - docker tag rent_cars:$CI_COMMIT_SHA rent_cars:latest
+  only:
+    - main
+    - develop
+
+# Publication sur Docker Hub
+push_to_dockerhub:
+  stage: docker
+  image: docker:24
+  services:
+    - docker:24-dind
+  before_script:
+    - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+  script:
+    - docker build -t $DOCKER_HUB_USERNAME/rent_cars:$CI_COMMIT_SHA -f Dockerfile .
+    - docker tag $DOCKER_HUB_USERNAME/rent_cars:$CI_COMMIT_SHA $DOCKER_HUB_USERNAME/rent_cars:latest
+    - docker push $DOCKER_HUB_USERNAME/rent_cars:$CI_COMMIT_SHA
+    - docker push $DOCKER_HUB_USERNAME/rent_cars:latest
+  only:
+    - main
+  when: manual
+
