@@ -1,5 +1,5 @@
 # Dockerfile pour l'application Symfony
-FROM php:8.3-fpm
+FROM php:8.2-fpm
 
 # Installation des dépendances système
 RUN apt-get update && apt-get install -y \

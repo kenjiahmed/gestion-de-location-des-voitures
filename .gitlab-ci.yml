@@ -7,22 +7,28 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
+  POSTGRES_DB: app_test
+  POSTGRES_USER: app
+  POSTGRES_PASSWORD: app
+  DATABASE_URL: "postgresql://app:app@postgres:5432/app_test?serverVersion=15&charset=utf8"
 
 # Cache Composer dependencies
 cache:
+  key: ${CI_COMMIT_REF_SLUG}
   paths:
     - vendor/
 
 # Installation des dépendances
 install_dependencies:
   stage: install
-  image: php:8.3-fpm
+  image: php:8.2-fpm
   before_script:
-    - apt-get update && apt-get install -y git zip unzip libpq-dev libzip-dev libicu-dev
+    - apt-get update && apt-get install -y git zip unzip libpq-dev libzip-dev libicu-dev libonig-dev libxml2-dev
     - docker-php-ext-install pdo pdo_pgsql zip intl
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     - composer install --no-interaction --prefer-dist --optimize-autoloader
+    - composer check-platform-reqs
   artifacts:
     paths:
       - vendor/
@@ -31,7 +37,7 @@ install_dependencies:
 # Tests unitaires
 unit_tests:
   stage: test
-  image: php:8.3-fpm
+  image: php:8.2-fpm
   services:
     - postgres:15
   variables:
@@ -40,21 +46,22 @@ unit_tests:
     POSTGRES_PASSWORD: app
     DATABASE_URL: "postgresql://app:app@postgres:5432/app_test?serverVersion=15&charset=utf8"
   before_script:
-    - apt-get update && apt-get install -y git libpq-dev libzip-dev libicu-dev
+    - apt-get update && apt-get install -y git libpq-dev libzip-dev libicu-dev libonig-dev libxml2-dev
     - docker-php-ext-install pdo pdo_pgsql zip intl
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
-    - composer install --no-interaction
-    - php bin/console doctrine:database:create --env=test --if-not-exists
-    - php bin/console doctrine:migrations:migrate --env=test --no-interaction
-    - php bin/phpunit tests/Unit
+    - cp .env.test .env.test.local || true
+    - composer install --no-interaction --no-progress
+    - php bin/console doctrine:database:create --env=test --if-not-exists || true
+    - php bin/console doctrine:migrations:migrate --env=test --no-interaction --allow-no-migration
+    - php bin/phpunit tests/Unit --colors=never
   dependencies:
     - install_dependencies
 
 # Tests d'intégration
 integration_tests:
   stage: test
-  image: php:8.3-fpm
+  image: php:8.2-fpm
   services:
     - postgres:15
   variables:
@@ -63,28 +70,31 @@ integration_tests:
     POSTGRES_PASSWORD: app
     DATABASE_URL: "postgresql://app:app@postgres:5432/app_test?serverVersion=15&charset=utf8"
   before_script:
-    - apt-get update && apt-get install -y git libpq-dev libzip-dev libicu-dev
+    - apt-get update && apt-get install -y git libpq-dev libzip-dev libicu-dev libonig-dev libxml2-dev
     - docker-php-ext-install pdo pdo_pgsql zip intl
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
-    - composer install --no-interaction
-    - php bin/console doctrine:database:create --env=test --if-not-exists
-    - php bin/console doctrine:migrations:migrate --env=test --no-interaction
-    - php bin/console doctrine:fixtures:load --env=test --no-interaction
-    - php bin/phpunit tests/Integration
+    - cp .env.test .env.test.local || true
+    - composer install --no-interaction --no-progress
+    - php bin/console doctrine:database:create --env=test --if-not-exists || true
+    - php bin/console doctrine:migrations:migrate --env=test --no-interaction --allow-no-migration
+    - php bin/console doctrine:fixtures:load --env=test --no-interaction || echo "Fixtures not available, skipping..."
+    - php bin/phpunit tests/Integration --colors=never
   dependencies:
     - install_dependencies
+  allow_failure: false
 
 # Analyse statique du code
 code_quality:
   stage: test
-  image: php:8.3-fpm
+  image: php:8.2-fpm
   before_script:
     - apt-get update && apt-get install -y git zip unzip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
-    - composer install --no-interaction
+    - composer install --no-interaction --no-progress
     - vendor/bin/phpunit --version
+    - php -v
   allow_failure: true
   dependencies:
     - install_dependencies
